@@ -123,7 +123,7 @@ def line():
 
     glPointSize(20)
     glBegin(GL_POINTS)
-    glColor3f(0,0,0)
+    glColor3f(69/255,252/255,185/255)
     glVertex2f(data[0][0],data[0][1])
     glEnd()
     glFlush()
@@ -194,8 +194,6 @@ def keyboard(bkey, x, y):
         rallyc=rallyc-1
         data = GetRallyPosition(connection,allrally[rallyc][0],allrally[rallyc][1])
         btype = GetRallyType(connection,allrally[rallyc][0],allrally[rallyc][1])
-        print(data)
-        print(btype)
         print('Here is game:', allrally[rallyc][0], ', rally:', allrally[rallyc][1])
         line()
 
