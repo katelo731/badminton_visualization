@@ -9,6 +9,8 @@ import numpy as np
 import pymysql
 import csv
 import sys
+import cv2
+import threading
 
 connection = DBconnect()
 allrally = GetAllRally(connection)
@@ -23,6 +25,12 @@ idc = 0
 def init():
     glClearColor(1,1,1,1)
     gluOrtho2D(400,0,0,850)   #left, right, bottom, top
+
+def create_window(size_h,size_w,position_h,position_w,name):
+    glutInitWindowSize(size_h,size_w) #height,width 
+    glutInitWindowPosition(position_h,position_w)
+    glutCreateWindow(name)
+    
     
 def line():
     glClear(GL_COLOR_BUFFER_BIT)
@@ -268,9 +276,8 @@ def keyboard(bkey, x, y):
 def main():
     glutInit(sys.argv)
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB)
-    glutInitWindowSize(400,850) #height,width glutInitWindowSize(400,850)
-    glutInitWindowPosition(50,50)
-    glutCreateWindow("Course")
+
+    create_window(400,850,0,0,"Course")
 
     glEnable(GL_POINT_SMOOTH)
     glutDisplayFunc(line)
@@ -278,22 +285,30 @@ def main():
     init()
     glutKeyboardFunc(keyboard)
     glutMainLoop()
+    
+def picture():
+    # Load an color image in grayscale
+    img = cv2.imread('./color2.jpg',3)
+    cv2.namedWindow('Color', cv2.WINDOW_NORMAL)
+    cv2.moveWindow('Color', 470,0)
+    cv2.resizeWindow('Color', 46,150)
+    # Display an image
+    cv2.imshow('Color',img)
+    cv2.waitKey(0)
+
+def main_task(): 
+  
+    # creating threads 
+    t1 = threading.Thread(target=main) 
+    t2 = threading.Thread(target=picture) 
+  
+    # start threads 
+    t1.start() 
+    t2.start() 
+  
+    # wait until threads finish their job 
+    t1.join() 
+    t2.join() 
 
 if __name__ == '__main__':
-    main()
-
-
-# from OpenGL.GL import *
-# #import OpenGL as gl
-
-# glClearColor(1.0, 1.0, 1.0, 0.0)
-# glClear(GL_COLOR_BUFFER_BIT)
-# glBegin(GL_TRIANGLES)
-# glColor3f(1.0,0.0,0.0)
-# glVertex2f(50.,50.)
-# glVertex2f(150.,50.)
-# glVertex2f(100.,150.)
-
-# glEnd()
-
-# glFlush()
+    main_task()
