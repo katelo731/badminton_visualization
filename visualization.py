@@ -11,6 +11,7 @@ import pymysql
 import csv
 import sys
 import cv2
+import math
 import threading
 
 connection = DBconnect()
@@ -32,6 +33,25 @@ def create_window(size_h,size_w,position_h,position_w,name):
     glutInitWindowSize(size_h,size_w) #height,width 
     glutInitWindowPosition(position_h,position_w)
     glutCreateWindow(name)
+
+def triangle_coordinate(from_x,from_y,to_x,to_y,point_size):
+    coordinate = [[0,0],[0,0],[0,0]]
+    point_size = point_size/2 + 0.5
+    
+    vector = [to_x - from_x , to_y - from_y]
+    normal_vector = [-vector[1] , vector[0]]
+    dis = math.sqrt(vector[0]*vector[0] + vector[1]*vector[1])  
+    unit_vector = [vector[0] / dis , vector[1] / dis]
+    unit_normal_vector = [normal_vector[0] / dis , normal_vector[1] / dis]
+
+    top = [to_x - unit_vector[0]*point_size , to_y - unit_vector[1]*point_size]
+    triangle_size = 10
+    mid = [top[0] - unit_vector[0]*triangle_size , top[1] - unit_vector[1]*triangle_size]
+    left = [mid[0] + unit_normal_vector[0]*triangle_size , mid[1] + unit_normal_vector[1]*triangle_size]
+    right = [mid[0] - unit_normal_vector[0]*triangle_size , mid[1] - unit_normal_vector[1]*triangle_size]
+
+    coordinate = [top,left,right]
+    return coordinate
 
 def draw_course():
     glClear(GL_COLOR_BUFFER_BIT)
@@ -127,6 +147,20 @@ def display():
         glEnd()
         glFlush()
 
+        # draw arrows
+        glBegin(GL_TRIANGLES)
+
+        glColor3f(0,1-var,1-var)
+
+        coordinate = triangle_coordinate(x1,y1,x2,y2,15)
+        glVertex2f(coordinate[0][0],coordinate[0][1])
+        glVertex2f(coordinate[1][0],coordinate[1][1])
+        glVertex2f(coordinate[2][0],coordinate[2][1])
+
+        glEnd()
+        glFlush()
+        
+
     # mark last ball with blue
     glPointSize(20)
     glBegin(GL_POINTS)
@@ -142,6 +176,8 @@ def display():
     glVertex2f(data[data.shape[0]-1][0],data[data.shape[0]-1][1])
     glEnd()
     glFlush()
+
+
 
 def keyboard(bkey, x, y):
     key = bkey.decode("utf-8")
@@ -227,6 +263,7 @@ def keyboard(bkey, x, y):
             btype = btype[-3:]
         print('Here is game:', loserally[rallyl][0], ', rally:', loserally[rallyl][1])
         display()
+
 '''
 def idle():
     global path
