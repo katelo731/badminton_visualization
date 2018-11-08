@@ -1,10 +1,11 @@
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
-from math import *    
+from math import *
 from db import *
 from connect import DBconnect
 from pynput.keyboard import Key, Controller
+import time
 import numpy as np
 import pymysql
 import csv
@@ -21,6 +22,7 @@ arrlen = data.size
 rallyc =0
 rallyl = -1
 idc = 0
+path = 0
 
 def init():
     glClearColor(1,1,1,1)
@@ -30,13 +32,13 @@ def create_window(size_h,size_w,position_h,position_w,name):
     glutInitWindowSize(size_h,size_w) #height,width 
     glutInitWindowPosition(position_h,position_w)
     glutCreateWindow(name)
-    
-def line():
+
+def draw_course():
     glClear(GL_COLOR_BUFFER_BIT)
     glLineWidth(5)
+
     glBegin(GL_LINES)
     glColor3f(1,0,0)
-
     # parallel course line
     glVertex2f(10.0,14.0)
     glVertex2f(378.0,14.0)
@@ -65,33 +67,14 @@ def line():
     glVertex2f(350.0,820.0)
     glVertex2f(378.0,14.0)
     glVertex2f(378.0,820.0)
-
     glEnd()
     glFlush()
+    
+def display():
+    global path
+    draw_course()
 
-    glLineWidth(2)
-    glBegin(GL_LINES)
-    var=0.95
-    for i in range(len(data)-1):
-        x1,y1 = data[i]
-        x2,y2 = data[i+1]
-        midx = (x2+x1)/2.0 
-        midy = (y1+y2)/2.0 
-        
-        var=var - 1.0/data.size
-        glColor3f(0,1-var,1-var)
-        
-        glVertex2f(x1,y1)
-        glVertex2f(midx,midy)
-        
-        var=var - 1.0/data.size
-        glColor3f(0,1-var,1-var)
-        
-        glVertex2f(midx,midy)
-        glVertex2f(x2,y2)
-    glEnd()
-    glFlush()
-
+    # mark first ball with green
     glPointSize(20)
     glBegin(GL_POINTS)
     glColor3f(69/255,252/255,185/255)
@@ -99,13 +82,11 @@ def line():
     glEnd()
     glFlush()
 
-    glPointSize(15)
-    glBegin(GL_POINTS)
-    glColor3f(0,0,1)
-
-    # print(btype.shape)
-    # print(btype)
+    var=0.95
     for i in range(data.shape[0]-1):
+        # draw point
+        glPointSize(15)
+        glBegin(GL_POINTS)
         if btype[i][0] == '切球':
             glColor3f(30/255.,144/255.,255/255.)#blue
         if btype[i][0] == '放小球' or btype[i][0] == '發小球' or btype[i][0] == '擋小球' or btype[i][0] == '小球':
@@ -119,10 +100,34 @@ def line():
         if btype[i][0] == '長球':
             glColor3f(139/255.,69/255.,19/255.)#brown
         glVertex2f(data[i][0],data[i][1])
-        glColor3f(0,0,1)
-    glEnd()
-    glFlush()
+        glEnd()
+        glFlush()
 
+        # draw line
+        glPointSize(2)
+        glBegin(GL_POINTS)
+        x1,y1 = data[i]
+        x2,y2 = data[i+1]
+        dx = (x2-x1)/500.0
+        dy = (y2-y1)/500.0
+
+        var=var - 1.0/data.size
+        glColor3f(0,1-var,1-var)
+        for i in range(0,250,1):
+            glVertex2f(x1+dx*i,y1+dy*i)
+            time.sleep(0.00000001)
+
+        var=var - 1.0/data.size
+        glColor3f(0,1-var,1-var)
+        for i in range(250,500,1):
+            glVertex2f(x1+dx*i,y1+dy*i)
+            time.sleep(0.00000001)
+
+        glColor3f(0,0,1)
+        glEnd()
+        glFlush()
+
+    # mark last ball with blue
     glPointSize(20)
     glBegin(GL_POINTS)
     glColor3f(0,1,1)
@@ -130,6 +135,7 @@ def line():
     glEnd()
     glFlush()
 
+    # draw last ball
     glPointSize(15)
     glBegin(GL_POINTS)
     glColor3f(0,0,1)
@@ -156,7 +162,7 @@ def keyboard(bkey, x, y):
         data = GetRallyPosition(connection,allrally[rallyc][0],allrally[rallyc][1])
         btype = GetRallyType(connection,allrally[rallyc][0],allrally[rallyc][1])
         print('Here is game:', allrally[rallyc][0], ', rally:', allrally[rallyc][1])
-        line()
+        display()
     if key == 'd' or key == 'D':
         if rallyc>=len(allrally)-1:
             print("There's no next rally!")
@@ -166,7 +172,7 @@ def keyboard(bkey, x, y):
         data = GetRallyPosition(connection,allrally[rallyc][0],allrally[rallyc][1])
         btype = GetRallyType(connection,allrally[rallyc][0],allrally[rallyc][1])
         print('Here is game:', allrally[rallyc][0], ', rally:', allrally[rallyc][1])
-        line()
+        display()
     if key == 'w' or key == 'W':
         if(allrally[rallyc][0]=='2018-Indonesia_open-finals-1-1'):
             print("There's no previous game!")
@@ -178,7 +184,7 @@ def keyboard(bkey, x, y):
         data = GetRallyPosition(connection,allrally[rallyc][0],allrally[rallyc][1])
         btype = GetRallyType(connection,allrally[rallyc][0],allrally[rallyc][1])
         print('Here is game:', allrally[rallyc][0], ', rally:', allrally[rallyc][1])
-        line()
+        display()
     if key == 's' or key == 'S':
         if(allrally[rallyc][0]=='2018-Indonesia_open-finals-1-2'):
             print("There's no next game!")
@@ -190,7 +196,7 @@ def keyboard(bkey, x, y):
         data = GetRallyPosition(connection,allrally[rallyc][0],allrally[rallyc][1])
         btype = GetRallyType(connection,allrally[rallyc][0],allrally[rallyc][1])
         print('Here is game:', allrally[rallyc][0], ', rally:', allrally[rallyc][1])
-        line()
+        display()
     if key == 'h' or key == 'H':
         # print(rallyl)
         if rallyl>=len(loserally)-1:
@@ -205,7 +211,7 @@ def keyboard(bkey, x, y):
         if btype.shape[0] > 3:
             btype = btype[-3:]
         print('Here is game:', loserally[rallyl][0], ', rally:', loserally[rallyl][1])
-        line()
+        display()
     if key == 'f' or key == 'F':
         # print(rallyl)
         if rallyl == 0:
@@ -220,8 +226,14 @@ def keyboard(bkey, x, y):
         if btype.shape[0] > 3:
             btype = btype[-3:]
         print('Here is game:', loserally[rallyl][0], ', rally:', loserally[rallyl][1])
-        line()
-
+        display()
+'''
+def idle():
+    global path
+    Sleep(20)
+    path = (path+1)%500
+    display()
+'''
 def main():
     glutInit(sys.argv)
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB)
@@ -229,10 +241,11 @@ def main():
     create_window(400,850,0,0,"Course")
 
     glEnable(GL_POINT_SMOOTH)
-    glutDisplayFunc(line)
+    glutDisplayFunc(display)
     glRotatef(180.0, 0.0, 0.0, 1.0)
     init()
     glutKeyboardFunc(keyboard)
+    #glutIdleFunc(idle)
     glutMainLoop()
     
 def picture():
