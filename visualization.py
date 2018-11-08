@@ -31,33 +31,12 @@ def create_window(size_h,size_w,position_h,position_w,name):
     glutInitWindowPosition(position_h,position_w)
     glutCreateWindow(name)
     
-    
 def line():
     glClear(GL_COLOR_BUFFER_BIT)
-    
-    # glColor3f(1,0,0)
-
-    # posx, posy = 0,0    
-    # sides = 32    
-    # radius = 1    
-    # glBegin(GL_POLYGON)    
-    # for i in range(100):    
-    #     cosine= radius * cos(i*2*pi/sides) + posx    
-    #     sine  = radius * sin(i*2*pi/sides) + posy    
-    #     angle = 2 * pi / sides
-    #     x = 100
-    #     y = 200
-
-    #     glVertex2f(x,y)
-
-    # glEnd()
-    # glFlush()
-
     glLineWidth(5)
     glBegin(GL_LINES)
-    # glBegin(GL_LINE_STRIP)
     glColor3f(1,0,0)
-    # glColor3f(0.9804,0.502,0.4471)
+
     # parallel course line
     glVertex2f(10.0,14.0)
     glVertex2f(378.0,14.0)
@@ -87,27 +66,12 @@ def line():
     glVertex2f(378.0,14.0)
     glVertex2f(378.0,820.0)
 
-    # glVertex2f(25.0,25.0)
-    # glVertex2f(50.0,25.0)
-    
-    # glVertex2f(50.0,50.0)
-    #  glColor3f(1,0,0)
-    # glVertex2f(-1, -1)
-    
-    # glColor3f(0,1,0)
-    # glVertex2f(1, -1)
-    
-    # glColor3f(0,0,1)
-    # glVertex2f(0, 1)
-    
     glEnd()
     glFlush()
 
     glLineWidth(2)
     glBegin(GL_LINES)
-
     var=0.95
-
     for i in range(len(data)-1):
         x1,y1 = data[i]
         x2,y2 = data[i+1]
@@ -125,7 +89,6 @@ def line():
         
         glVertex2f(midx,midy)
         glVertex2f(x2,y2)
-
     glEnd()
     glFlush()
 
@@ -143,10 +106,6 @@ def line():
     # print(btype.shape)
     # print(btype)
     for i in range(data.shape[0]-1):
-        # if i == 0:
-        #     glColor3f(0.9804,0.502,0.4471)
-        # if i == data.shape[0]-1:
-        #     glColor3f(0.804,0.2,0.2)
         if btype[i][0] == '切球':
             glColor3f(30/255.,144/255.,255/255.)#blue
         if btype[i][0] == '放小球' or btype[i][0] == '發小球' or btype[i][0] == '擋小球' or btype[i][0] == '小球':
@@ -164,7 +123,6 @@ def line():
     glEnd()
     glFlush()
 
-
     glPointSize(20)
     glBegin(GL_POINTS)
     glColor3f(0,1,1)
@@ -179,11 +137,6 @@ def line():
     glEnd()
     glFlush()
 
-
-
-
-    
-
 def keyboard(bkey, x, y):
     key = bkey.decode("utf-8")
     global rallyc
@@ -194,7 +147,7 @@ def keyboard(bkey, x, y):
     global btype
     global loserally
 
-    if key == 'a':
+    if key == 'a' or key == 'A':
         if rallyc==0:
             print("There's no previous rally!")
             print('Here is game:', allrally[rallyc][0], ', rally:', allrally[rallyc][1])
@@ -204,8 +157,7 @@ def keyboard(bkey, x, y):
         btype = GetRallyType(connection,allrally[rallyc][0],allrally[rallyc][1])
         print('Here is game:', allrally[rallyc][0], ', rally:', allrally[rallyc][1])
         line()
-
-    if key == 'd':
+    if key == 'd' or key == 'D':
         if rallyc>=len(allrally)-1:
             print("There's no next rally!")
             print('Here is game:', allrally[rallyc][0], ', rally:', allrally[rallyc][1])
@@ -215,8 +167,7 @@ def keyboard(bkey, x, y):
         btype = GetRallyType(connection,allrally[rallyc][0],allrally[rallyc][1])
         print('Here is game:', allrally[rallyc][0], ', rally:', allrally[rallyc][1])
         line()
-
-    if key == 'w':
+    if key == 'w' or key == 'W':
         if(allrally[rallyc][0]=='2018-Indonesia_open-finals-1-1'):
             print("There's no previous game!")
             print('Here is game:', allrally[rallyc][0], ', rally:', allrally[rallyc][1])
@@ -228,8 +179,7 @@ def keyboard(bkey, x, y):
         btype = GetRallyType(connection,allrally[rallyc][0],allrally[rallyc][1])
         print('Here is game:', allrally[rallyc][0], ', rally:', allrally[rallyc][1])
         line()
-
-    if key == 's':
+    if key == 's' or key == 'S':
         if(allrally[rallyc][0]=='2018-Indonesia_open-finals-1-2'):
             print("There's no next game!")
             print('Here is game:', allrally[rallyc][0], ', rally:', allrally[rallyc][1])
@@ -241,8 +191,7 @@ def keyboard(bkey, x, y):
         btype = GetRallyType(connection,allrally[rallyc][0],allrally[rallyc][1])
         print('Here is game:', allrally[rallyc][0], ', rally:', allrally[rallyc][1])
         line()
-    
-    if key == 'h':
+    if key == 'h' or key == 'H':
         # print(rallyl)
         if rallyl>=len(loserally)-1:
             print("There's no next rally!")
@@ -257,7 +206,7 @@ def keyboard(bkey, x, y):
             btype = btype[-3:]
         print('Here is game:', loserally[rallyl][0], ', rally:', loserally[rallyl][1])
         line()
-    if key == 'f':
+    if key == 'f' or key == 'F':
         # print(rallyl)
         if rallyl == 0:
             print("There's no previous rally!")
