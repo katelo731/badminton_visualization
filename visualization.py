@@ -23,6 +23,8 @@ arrlen = data.size
 rallyc =0
 rallyl = -1
 idc = 0
+pause = 0
+ball = 0
 path = 0
 
 def init():
@@ -91,6 +93,7 @@ def draw_course():
     glFlush()
     
 def display():
+    global ball
     global path
     draw_course()
 
@@ -123,6 +126,8 @@ def display():
         glEnd()
         glFlush()
 
+        time.sleep(0.1)
+
         # draw line
         glPointSize(2)
         glBegin(GL_POINTS)
@@ -135,13 +140,11 @@ def display():
         glColor3f(0,1-var,1-var)
         for i in range(0,250,1):
             glVertex2f(x1+dx*i,y1+dy*i)
-            time.sleep(0.00000001)
 
         var=var - 1.0/data.size
         glColor3f(0,1-var,1-var)
         for i in range(250,500,1):
             glVertex2f(x1+dx*i,y1+dy*i)
-            time.sleep(0.00000001)
 
         glColor3f(0,0,1)
         glEnd()
@@ -149,7 +152,6 @@ def display():
 
         # draw arrows
         glBegin(GL_TRIANGLES)
-
         glColor3f(0,1-var,1-var)
 
         coordinate = triangle_coordinate(x1,y1,x2,y2,15)
@@ -159,7 +161,6 @@ def display():
 
         glEnd()
         glFlush()
-        
 
     # mark last ball with blue
     glPointSize(20)
@@ -177,8 +178,6 @@ def display():
     glEnd()
     glFlush()
 
-
-
 def keyboard(bkey, x, y):
     key = bkey.decode("utf-8")
     global rallyc
@@ -188,6 +187,7 @@ def keyboard(bkey, x, y):
     global allrally
     global btype
     global loserally
+    global pause
 
     if key == 'a' or key == 'A':
         if rallyc==0:
@@ -198,7 +198,6 @@ def keyboard(bkey, x, y):
         data = GetRallyPosition(connection,allrally[rallyc][0],allrally[rallyc][1])
         btype = GetRallyType(connection,allrally[rallyc][0],allrally[rallyc][1])
         print('Here is game:', allrally[rallyc][0], ', rally:', allrally[rallyc][1])
-        display()
     if key == 'd' or key == 'D':
         if rallyc>=len(allrally)-1:
             print("There's no next rally!")
@@ -208,7 +207,6 @@ def keyboard(bkey, x, y):
         data = GetRallyPosition(connection,allrally[rallyc][0],allrally[rallyc][1])
         btype = GetRallyType(connection,allrally[rallyc][0],allrally[rallyc][1])
         print('Here is game:', allrally[rallyc][0], ', rally:', allrally[rallyc][1])
-        display()
     if key == 'w' or key == 'W':
         if(allrally[rallyc][0]=='2018-Indonesia_open-finals-1-1'):
             print("There's no previous game!")
@@ -220,7 +218,6 @@ def keyboard(bkey, x, y):
         data = GetRallyPosition(connection,allrally[rallyc][0],allrally[rallyc][1])
         btype = GetRallyType(connection,allrally[rallyc][0],allrally[rallyc][1])
         print('Here is game:', allrally[rallyc][0], ', rally:', allrally[rallyc][1])
-        display()
     if key == 's' or key == 'S':
         if(allrally[rallyc][0]=='2018-Indonesia_open-finals-1-2'):
             print("There's no next game!")
@@ -232,7 +229,6 @@ def keyboard(bkey, x, y):
         data = GetRallyPosition(connection,allrally[rallyc][0],allrally[rallyc][1])
         btype = GetRallyType(connection,allrally[rallyc][0],allrally[rallyc][1])
         print('Here is game:', allrally[rallyc][0], ', rally:', allrally[rallyc][1])
-        display()
     if key == 'h' or key == 'H':
         # print(rallyl)
         if rallyl>=len(loserally)-1:
@@ -247,7 +243,6 @@ def keyboard(bkey, x, y):
         if btype.shape[0] > 3:
             btype = btype[-3:]
         print('Here is game:', loserally[rallyl][0], ', rally:', loserally[rallyl][1])
-        display()
     if key == 'f' or key == 'F':
         # print(rallyl)
         if rallyl == 0:
@@ -262,14 +257,24 @@ def keyboard(bkey, x, y):
         if btype.shape[0] > 3:
             btype = btype[-3:]
         print('Here is game:', loserally[rallyl][0], ', rally:', loserally[rallyl][1])
-        display()
-
+    '''
+    if key == ' ':
+        if pause==1:
+            pause=0
+            return
+        else:
+            pause=1
+            return
+    '''
+    glutPostRedisplay()
 '''
 def idle():
-    global path
-    Sleep(20)
-    path = (path+1)%500
-    display()
+    global count
+    global pause
+    time.sleep(0.1)
+    if pause == 0:
+        count = 0
+        #glutPostRedisplay()
 '''
 def main():
     glutInit(sys.argv)
