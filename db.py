@@ -65,5 +65,52 @@ def GetRallyType(connection,unique_id,rally):
 
     return result
 
+def GetRallyType(connection,unique_id,rally):
+    
+    mycursor = connection.cursor()
+
+    sql="""select type from clip_info where unique_id = %s and rally = %s; 
+                """
+    mycursor.execute(sql,(unique_id,rally))  
+    connection.commit() 
+    
+    result = mycursor.fetchall()
+    result = np.asarray(result)
+    
+    mycursor.close()  
+
+    return result
+
+def GetCourtUpper(connection,unique_id):
+    
+    mycursor = connection.cursor()
+
+    sql="""select player_ename from player_info where unique_id = %s and half_court = 'upper'; 
+                """
+    mycursor.execute(sql,unique_id)  
+    connection.commit() 
+    
+    result = mycursor.fetchall()
+    result = np.asarray(result)
+    
+    mycursor.close()  
+
+    return result[0][0]
+
+def GetCourtLower(connection,unique_id):
+    
+    mycursor = connection.cursor()
+
+    sql="""select player_ename from player_info where unique_id = %s and half_court = 'lower'; 
+                """
+    mycursor.execute(sql,unique_id)  
+    connection.commit() 
+    
+    result = mycursor.fetchall()
+    result = np.asarray(result)
+    
+    mycursor.close()  
+
+    return result[0][0]
 # connection = DBconnect()
-# print(GetRallyType(connection,'2018-Indonesia_open-finals-1-1','25'))
+# print(GetCourtLower(connection,'2018-Indonesia_open-finals-1-1'))

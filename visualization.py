@@ -17,6 +17,7 @@ from PIL import ImageFont, ImageDraw, Image
 
 
 connection = DBconnect()
+connection2 = DBconnect()
 allrally = GetAllRally(connection)
 loserally = GetLoseRally(connection,'B')
 data = GetRallyPosition(connection,allrally[0][0],allrally[0][1])
@@ -27,6 +28,7 @@ rallyl = -1
 idc = 0
 rev1 = 0
 rev2 = 0
+global unique_id
 #pause = 0
 
 def init():
@@ -243,6 +245,7 @@ def keyboard(bkey, x, y):
     global btype
     global loserally
     global rev2
+    global unique_id
 
     if key == 'a' or key == 'A':
         if rallyc==0:
@@ -253,6 +256,8 @@ def keyboard(bkey, x, y):
         data = GetRallyPosition(connection,allrally[rallyc][0],allrally[rallyc][1])
         btype = GetRallyType(connection,allrally[rallyc][0],allrally[rallyc][1])
         print('Here is game:', allrally[rallyc][0], ', rally:', allrally[rallyc][1])
+        unique_id = allrally[rallyc][0]
+        print(unique_id)
         glutPostRedisplay()
     if key == 'd' or key == 'D':
         if rallyc>=len(allrally)-1:
@@ -263,6 +268,8 @@ def keyboard(bkey, x, y):
         data = GetRallyPosition(connection,allrally[rallyc][0],allrally[rallyc][1])
         btype = GetRallyType(connection,allrally[rallyc][0],allrally[rallyc][1])
         print('Here is game:', allrally[rallyc][0], ', rally:', allrally[rallyc][1])
+        unique_id = allrally[rallyc][0]
+        print('d: ',unique_id)
         glutPostRedisplay()
     if key == 'w' or key == 'W':
         if(allrally[rallyc][0]=='2018-Indonesia_open-finals-1-1'):
@@ -275,6 +282,8 @@ def keyboard(bkey, x, y):
         data = GetRallyPosition(connection,allrally[rallyc][0],allrally[rallyc][1])
         btype = GetRallyType(connection,allrally[rallyc][0],allrally[rallyc][1])
         print('Here is game:', allrally[rallyc][0], ', rally:', allrally[rallyc][1])
+        unique_id = allrally[rallyc][0]
+        print('w: ',unique_id)
         glutPostRedisplay()
     if key == 's' or key == 'S':
         if(allrally[rallyc][0]=='2018-Indonesia_open-finals-1-2'):
@@ -287,6 +296,8 @@ def keyboard(bkey, x, y):
         data = GetRallyPosition(connection,allrally[rallyc][0],allrally[rallyc][1])
         btype = GetRallyType(connection,allrally[rallyc][0],allrally[rallyc][1])
         print('Here is game:', allrally[rallyc][0], ', rally:', allrally[rallyc][1])
+        unique_id = allrally[rallyc][0]
+        print('s: ',unique_id)
         glutPostRedisplay()
     if key == 'h' or key == 'H':
         # print(rallyl)
@@ -357,22 +368,25 @@ def show_color_type():
     img = cv2.imread('./color2.jpg')
     create_CVwindow(46,150,470,0,'Color',img)
     
+
 def show_player_info():
+    global unique_id
+    unique_id = allrally[0][0]
+    while(True):
+        name_upper = GetCourtUpper(connection2,unique_id)
+        upper = cv2.imread(str(name_upper) + '.jpg')
+        cv2.rectangle(upper, (0, 516), (560, 646), (255,255,255), -1)
+        upper = draw_text(upper , name_upper , 75 , (80,520) , (255,0,0))
+
+        name_lower = GetCourtLower(connection2,unique_id)
+        lower = cv2.imread(str(name_lower) + '.jpg')
+        cv2.rectangle(lower, (0, 516), (560, 646), (255,255,255), -1)
+        lower = draw_text(lower , name_lower , 75 , (80,520) , (0,0,0))
+        numpy_vertical = np.vstack((upper, lower))
+
+        create_CVwindow(200,400,460,200,'PlayerInfo',numpy_vertical)
+        cv2.waitKey(1)
    
-    name_a = 'TAI Tzu Ying'
-    a = cv2.imread(str(name_a) + '.jpg')
-    cv2.rectangle(a, (0, 516), (560, 646), (255,255,255), -1)
-    a = draw_text(a , name_a , 75 , (80,520) , (255,0,0))
-
-    name_b = 'CHEN Yufei'
-    b = cv2.imread(str(name_b) + '.jpg')
-    cv2.rectangle(b, (0, 516), (560, 646), (255,255,255), -1)
-    b = draw_text(b , name_b , 75 , (80,520) , (0,0,0))
-    numpy_vertical = np.vstack((a, b))
-
-    create_CVwindow(200,400,470,200,'PlayerInfo',numpy_vertical)
-    cv2.waitKey(0)
-    cv2.waitKey(0)
 
 
 def main():
@@ -392,6 +406,7 @@ def main():
 def picture():
     show_color_type()
     show_player_info()
+    cv2.waitKey(0)
 
 def main_task(): 
   
