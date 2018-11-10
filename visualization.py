@@ -13,6 +13,8 @@ import sys
 import cv2
 import math
 import threading
+from PIL import ImageFont, ImageDraw, Image
+
 
 connection = DBconnect()
 allrally = GetAllRally(connection)
@@ -31,10 +33,16 @@ def init():
     glClearColor(1,1,1,1)
     gluOrtho2D(400,0,0,850)   #left, right, bottom, top
 
-def create_window(size_h,size_w,position_h,position_w,name):
+def create_GLwindow(size_h,size_w,position_h,position_w,name):
     glutInitWindowSize(size_h,size_w) #height,width 
     glutInitWindowPosition(position_h,position_w)
     glutCreateWindow(name)
+
+def create_CVwindow(size_h,size_w,position_h,position_w,name,img):
+    cv2.namedWindow(name, cv2.WINDOW_NORMAL)
+    cv2.moveWindow(name, position_h,position_w)
+    cv2.resizeWindow(name, size_h,size_w)
+    cv2.imshow(name, img)
 
 def triangle_coordinate(from_x,from_y,to_x,to_y,point_size):
     coordinate = [[0,0],[0,0],[0,0]]
@@ -334,11 +342,44 @@ def idle():
         count = 0
         #glutPostRedisplay()
 '''
+def draw_text(img,text,fond_size,position,color):
+    fontPath = "./Times_New_Roman_Bold.ttf"         # 指定 TTF 字體檔
+    font = ImageFont.truetype(fontPath, fond_size)  # 載入字體
+
+    aPil = Image.fromarray(img)                     # 將 NumPy 陣列轉為 PIL 影像
+    draw = ImageDraw.Draw(aPil)                     # 在圖片上加入文字
+    draw.text(position,  text, font = font, fill = color)
+    img = np.array(aPil)                            # 將 PIL 影像轉回 NumPy 陣列
+    
+    return img
+def show_color_type():
+    # Load an type&color image 
+    img = cv2.imread('./color2.jpg')
+    create_CVwindow(46,150,470,0,'Color',img)
+    
+def show_player_info():
+   
+    name_a = 'TAI Tzu Ying'
+    a = cv2.imread(str(name_a) + '.jpg')
+    cv2.rectangle(a, (0, 516), (560, 646), (255,255,255), -1)
+    a = draw_text(a , name_a , 75 , (80,520) , (255,0,0))
+
+    name_b = 'CHEN Yufei'
+    b = cv2.imread(str(name_b) + '.jpg')
+    cv2.rectangle(b, (0, 516), (560, 646), (255,255,255), -1)
+    b = draw_text(b , name_b , 75 , (80,520) , (0,0,0))
+    numpy_vertical = np.vstack((a, b))
+
+    create_CVwindow(200,400,470,200,'PlayerInfo',numpy_vertical)
+    cv2.waitKey(0)
+    cv2.waitKey(0)
+
+
 def main():
     glutInit(sys.argv)
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB)
 
-    create_window(400,850,0,0,"Course")
+    create_GLwindow(400,850,0,0,"Course")
 
     glEnable(GL_POINT_SMOOTH)
     glutDisplayFunc(display)
@@ -349,14 +390,8 @@ def main():
     glutMainLoop()
     
 def picture():
-    # Load an color image in grayscale
-    img = cv2.imread('./color2.jpg',3)
-    cv2.namedWindow('Color', cv2.WINDOW_NORMAL)
-    cv2.moveWindow('Color', 470,0)
-    cv2.resizeWindow('Color', 46,150)
-    # Display an image
-    cv2.imshow('Color',img)
-    cv2.waitKey(0)
+    show_color_type()
+    show_player_info()
 
 def main_task(): 
   
