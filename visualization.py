@@ -28,7 +28,8 @@ rallyl = -1
 idc = 0
 rev1 = 0
 rev2 = 0
-global unique_id
+unique_id = allrally[0][0]
+rally = 1
 #pause = 0
 
 def init():
@@ -246,6 +247,7 @@ def keyboard(bkey, x, y):
     global loserally
     global rev2
     global unique_id
+    global rally
 
     if key == 'a' or key == 'A':
         if rallyc==0:
@@ -257,7 +259,7 @@ def keyboard(bkey, x, y):
         btype = GetRallyType(connection,allrally[rallyc][0],allrally[rallyc][1])
         print('Here is game:', allrally[rallyc][0], ', rally:', allrally[rallyc][1])
         unique_id = allrally[rallyc][0]
-        print(unique_id)
+        rally = allrally[rallyc][1]
         glutPostRedisplay()
     if key == 'd' or key == 'D':
         if rallyc>=len(allrally)-1:
@@ -269,7 +271,7 @@ def keyboard(bkey, x, y):
         btype = GetRallyType(connection,allrally[rallyc][0],allrally[rallyc][1])
         print('Here is game:', allrally[rallyc][0], ', rally:', allrally[rallyc][1])
         unique_id = allrally[rallyc][0]
-        print('d: ',unique_id)
+        rally = allrally[rallyc][1]
         glutPostRedisplay()
     if key == 'w' or key == 'W':
         if(allrally[rallyc][0]=='2018-Indonesia_open-finals-1-1'):
@@ -283,7 +285,7 @@ def keyboard(bkey, x, y):
         btype = GetRallyType(connection,allrally[rallyc][0],allrally[rallyc][1])
         print('Here is game:', allrally[rallyc][0], ', rally:', allrally[rallyc][1])
         unique_id = allrally[rallyc][0]
-        print('w: ',unique_id)
+        rally = allrally[rallyc][1]
         glutPostRedisplay()
     if key == 's' or key == 'S':
         if(allrally[rallyc][0]=='2018-Indonesia_open-finals-1-2'):
@@ -297,7 +299,7 @@ def keyboard(bkey, x, y):
         btype = GetRallyType(connection,allrally[rallyc][0],allrally[rallyc][1])
         print('Here is game:', allrally[rallyc][0], ', rally:', allrally[rallyc][1])
         unique_id = allrally[rallyc][0]
-        print('s: ',unique_id)
+        rally = allrally[rallyc][1]
         glutPostRedisplay()
     if key == 'h' or key == 'H':
         # print(rallyl)
@@ -364,7 +366,7 @@ def draw_text(img,text,fond_size,position,color):
     
     return img
 def show_color_type():
-    # Load an type&color image 
+    # Load an type & color image 
     img = cv2.imread('./color2.jpg')
     create_CVwindow(46,150,470,0,'Color',img)
     
@@ -373,18 +375,47 @@ def show_player_info():
     global unique_id
     unique_id = allrally[0][0]
     while(True):
-        name_upper = GetCourtUpper(connection2,unique_id)
+        # load data
+        name_upper,player_upper = GetCourtUpper(connection2,unique_id)
+        name_lower,player_lower = GetCourtLower(connection2,unique_id)
+        score_upper = GetRallyPoints(connection2,unique_id,rally,player_upper)
+        score_lower = GetRallyPoints(connection2,unique_id,rally,player_lower)
+        # show picture and name
         upper = cv2.imread(str(name_upper) + '.jpg')
-        cv2.rectangle(upper, (0, 516), (560, 646), (255,255,255), -1)
-        upper = draw_text(upper , name_upper , 75 , (80,520) , (255,0,0))
-
-        name_lower = GetCourtLower(connection2,unique_id)
         lower = cv2.imread(str(name_lower) + '.jpg')
-        cv2.rectangle(lower, (0, 516), (560, 646), (255,255,255), -1)
-        lower = draw_text(lower , name_lower , 75 , (80,520) , (0,0,0))
-        numpy_vertical = np.vstack((upper, lower))
+        cv2.rectangle(upper, (0, 516), (560, 646),(238, 215,143 ) , -1)
+        cv2.rectangle(lower, (0, 516), (560, 646), (142, 215,167 ), -1)
+        upper = draw_text(upper , name_upper , 75 , (80,520) , (79,24,0))
+        lower = draw_text(lower , name_lower , 75 , (80,520) , (8,35,0))
+        """
+        # show score
+        cv2.circle(upper, (470, 430), 68, (255,255,255 ), -1, 8, 0)
+        cv2.circle(lower, (470, 430), 68, (255,255,255 ), -1, 8, 0)
+        if score_upper > score_lower:
+            upper = draw_text(upper , str(score_upper).rjust(2,' ') , 85 , (430, 385) , (0,0,255 ))
+            lower = draw_text(lower , str(score_lower).rjust(2,' ') , 85 , (430, 385) , (0,0,0 ))
+        elif score_upper < score_lower:
+            upper = draw_text(upper , str(score_upper).rjust(2,' ') , 85 , (430, 385) , (0,0,0 ))
+            lower = draw_text(lower , str(score_lower).rjust(2,' ') , 85 , (430, 385) , (0,0,255 ))
+        else:
+            upper = draw_text(upper , str(score_upper).rjust(2,' ') , 85 , (430, 385) , (255, 5, 163))
+            lower = draw_text(lower , str(score_lower).rjust(2,' ') , 85 , (430, 385) , (255, 5, 163))
+        """
 
-        create_CVwindow(200,400,460,200,'PlayerInfo',numpy_vertical)
+        if score_upper > score_lower:
+            cv2.circle(upper, (470, 430), 68, (0,0,255 ), -1, 8, 0)
+            cv2.circle(lower, (470, 430), 68, (0,0,0 ), -1, 8, 0)
+        elif score_upper < score_lower:
+            cv2.circle(upper, (470, 430), 68, (0,0,0 ), -1, 8, 0)
+            cv2.circle(lower, (470, 430), 68, (0,0,255 ), -1, 8, 0)
+        else:
+            cv2.circle(upper, (470, 430), 68, (40, 144, 255), -1, 8, 0)
+            cv2.circle(lower, (470, 430), 68, (40, 144, 255), -1, 8, 0)
+
+        upper = draw_text(upper , str(score_upper).rjust(2,' ') , 85 , (430, 385) , (255,255,255 ))
+        lower = draw_text(lower , str(score_lower).rjust(2,' ') , 85 , (430, 385) , (255,255,255 ))
+        numpy_vertical = np.vstack((upper, lower))
+        create_CVwindow(140,350,460,200,'PlayerInfo',numpy_vertical)
         cv2.waitKey(1)
    
 
