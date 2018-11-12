@@ -114,9 +114,7 @@ def display():
         btype = btype[::-1]
     rev1 = rev2
 
-    if rev2==0:
-        print("Forward!")
-    else:
+    if rev2!=0:
         print("Reverse!")
 
     # mark first ball with black
@@ -390,21 +388,8 @@ def show_player_info():
         cv2.rectangle(lower, (0, 516), (560, 646), (142, 215,167 ), -1)
         upper = draw_text(upper , name_upper , 75 , (80,520) , (79,24,0))
         lower = draw_text(lower , name_lower , 75 , (80,520) , (8,35,0))
-        """
+        
         # show score
-        cv2.circle(upper, (470, 430), 68, (255,255,255 ), -1, 8, 0)
-        cv2.circle(lower, (470, 430), 68, (255,255,255 ), -1, 8, 0)
-        if score_upper > score_lower:
-            upper = draw_text(upper , str(score_upper).rjust(2,' ') , 85 , (430, 385) , (0,0,255 ))
-            lower = draw_text(lower , str(score_lower).rjust(2,' ') , 85 , (430, 385) , (0,0,0 ))
-        elif score_upper < score_lower:
-            upper = draw_text(upper , str(score_upper).rjust(2,' ') , 85 , (430, 385) , (0,0,0 ))
-            lower = draw_text(lower , str(score_lower).rjust(2,' ') , 85 , (430, 385) , (0,0,255 ))
-        else:
-            upper = draw_text(upper , str(score_upper).rjust(2,' ') , 85 , (430, 385) , (255, 5, 163))
-            lower = draw_text(lower , str(score_lower).rjust(2,' ') , 85 , (430, 385) , (255, 5, 163))
-        """
-
         if score_upper > score_lower:
             cv2.circle(upper, (470, 430), 68, (0,0,255 ), -1, 8, 0)
             cv2.circle(lower, (470, 430), 68, (0,0,0 ), -1, 8, 0)
@@ -417,6 +402,7 @@ def show_player_info():
         
         upper = draw_text(upper , str(score_upper).rjust(2,' ') , 85 , (430, 385) , (255,255,255 ))
         lower = draw_text(lower , str(score_lower).rjust(2,' ') , 85 , (430, 385) , (255,255,255 ))
+        
         numpy_vertical = np.vstack((upper, lower))
 
         create_CVwindow(140,350,460,300,'PlayerInfo',numpy_vertical)
