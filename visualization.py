@@ -316,6 +316,8 @@ def keyboard(bkey, x, y):
         if btype.shape[0] > 3:
             btype = btype[-3:]
         print('Here is game:', loserally[rallyl][0], ', rally:', loserally[rallyl][1])
+        unique_id = loserally[rallyl][0]
+        rally = loserally[rallyl][1]
         glutPostRedisplay()
     if key == 'f' or key == 'F':
         # print(rallyl)
@@ -331,6 +333,8 @@ def keyboard(bkey, x, y):
         if btype.shape[0] > 3:
             btype = btype[-3:]
         print('Here is game:', loserally[rallyl][0], ', rally:', loserally[rallyl][1])
+        unique_id = loserally[rallyl][0]
+        rally = loserally[rallyl][1]
         glutPostRedisplay()
     if key == 'q' or key == 'Q':
         if rev2 == 0:
