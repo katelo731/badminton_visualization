@@ -33,7 +33,7 @@ rally = 1
 
 def init():
     glClearColor(1,1,1,1)
-    gluOrtho2D(400,0,0,850)   #left, right, bottom, top
+    gluOrtho2D(500,0,0,1050)   #left, right, bottom, top
 
 def create_GLwindow(size_h,size_w,position_h,position_w,name):
     glutInitWindowSize(size_h,size_w) #height,width 
@@ -67,37 +67,37 @@ def triangle_coordinate(from_x,from_y,to_x,to_y,point_size):
 
 def draw_course():
     glClear(GL_COLOR_BUFFER_BIT)
-    glLineWidth(5)
+    glLineWidth(4)
     glBegin(GL_LINES)
     glColor3f(1,0,0)
     # parallel course line
-    glVertex2f(10.0,14.0)
-    glVertex2f(378.0,14.0)
-    glVertex2f(10.0,60.0)
-    glVertex2f(378.0,60.0)
-    glVertex2f(10.0,296.0)
-    glVertex2f(378.0,296.0)
-    glVertex2f(10.0,417.0)
-    glVertex2f(378.0,417.0)
-    glVertex2f(10.0,538.0)
-    glVertex2f(378.0,538.0)
-    glVertex2f(10.0,772.0)
-    glVertex2f(378.0,772.0)
-    glVertex2f(10.0,820.0)
-    glVertex2f(378.0,820.0)
+    glVertex2f(36.4,57.4)
+    glVertex2f(460.6,57.4)
+    glVertex2f(36.4,110.6)
+    glVertex2f(460.6,110.6)
+    glVertex2f(36.4,385.2)
+    glVertex2f(460.6,385.2)
+    glVertex2f(36.4,525.2)
+    glVertex2f(460.6,525.2)
+    glVertex2f(36.4,665.2)
+    glVertex2f(460.6,665.2)
+    glVertex2f(36.4,939.6)
+    glVertex2f(460.6,939.6)
+    glVertex2f(36.4,992.8)
+    glVertex2f(460.6,992.8)
     # vertical course line
-    glVertex2f(10.0,14.0)
-    glVertex2f(10.0,820.0)
-    glVertex2f(40.0,14.0)
-    glVertex2f(40.0,820.0)
-    glVertex2f(195.0,14.0)
-    glVertex2f(195.0,296.0)
-    glVertex2f(195.0,538.0)
-    glVertex2f(195.0,820.0)
-    glVertex2f(350.0,14.0)
-    glVertex2f(350.0,820.0)
-    glVertex2f(378.0,14.0)
-    glVertex2f(378.0,820.0)
+    glVertex2f(36.4,57.4)
+    glVertex2f(36.4,992.8)
+    glVertex2f(68.6,57.4)
+    glVertex2f(68.6,992.8)
+    glVertex2f(248.5,57.4)
+    glVertex2f(248.5,385.2)
+    glVertex2f(248.5,665.2)
+    glVertex2f(248.5,992.8)
+    glVertex2f(428.4,57.4)
+    glVertex2f(428.4,992.8)
+    glVertex2f(460.6,57.4)
+    glVertex2f(460.6,992.8)
     glEnd()
     glFlush()
     
