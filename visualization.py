@@ -123,23 +123,95 @@ def display():
         time.sleep(0.5)
 
         line = i
+        size = data.size*3
         draw_course()
 
         for j in range(i,i+4,1):
-            # mark first ball with black
             if j == 0:
-                glPointSize(20)
-                glBegin(GL_POINTS)
-                if rev2 == 0:
-                    glColor3f(0,0,0)
-                else:
-                    glColor3f(0,1,1)
-                glVertex2f(data[0][0],data[0][1])
-                glEnd()
-                glFlush()
+                for k in range(0,3,1):
+                    if k == 0:
+                        # mark first ball with black
+                        glPointSize(20)
+                        glBegin(GL_POINTS)
+                        if rev2 == 0:
+                            glColor3f(0,0,0)
+                        else:
+                            glColor3f(0,1,1)
+                        glVertex2f(data[0][0],data[0][1])
+                        glEnd()
+                        glFlush()
+                    else:
+                        # draw line
+                        glPointSize(2)
+                        glBegin(GL_POINTS)
+                        x1,y1 = data[k-1]
+                        x2,y2 = data[k]
+                        dx = (x2-x1)/500.0
+                        dy = (y2-y1)/500.0
+                        var = var - 1.0/size
+
+                        if rev2 == 0:
+                            glColor3f(0,1-var,1-var)
+                            for i in range(0,250,1):
+                                glVertex2f(x1+dx*i, y1+dy*i)
+
+                            var = var - 1.0/size
+                            glColor3f(0,1-var,1-var)
+                            for i in range(250,500,1):
+                                glVertex2f(x1+dx*i, y1+dy*i)
+                        else:
+                            glColor3f(0,var,var)
+                            for i in range(0,250,1):
+                                glVertex2f(x1+dx*i, y1+dy*i)
+
+                            var = var - 1.0/size
+                            glColor3f(0,var,var)
+                            for i in range(250,500,1):
+                                glVertex2f(x1+dx*i, y1+dy*i)
+                        glColor3f(0,0,1)
+                        glEnd()
+                        glFlush()
+                       
+                        # draw arrows
+                        glBegin(GL_TRIANGLES)
+                        if rev2 == 0:
+                            glColor3f(0,1-var,1-var)
+                            coordinate = triangle_coordinate(x1,y1,x2,y2,15)
+                        else:
+                            glColor3f(0,var,var)
+                            coordinate = triangle_coordinate(x2,y2,x1,y1,15)
+                        glVertex2f(coordinate[0][0],coordinate[0][1])
+                        glVertex2f(coordinate[1][0],coordinate[1][1])
+                        glVertex2f(coordinate[2][0],coordinate[2][1])
+                        glEnd()
+                        glFlush()
+
+                    # draw point
+                    glPointSize(15)
+                    glBegin(GL_POINTS)
+                    if btype[k][0] == '切球':
+                        glColor3f(30/255.,144/255.,255/255.)#blue
+                    elif btype[k][0] == '放小球' or btype[k][0] == '發小球' or btype[k][0] == '擋小球' or btype[k][0] == '小球':
+                        glColor3f(138/255.,43/255.,226/255.)#purple
+                    elif btype[k][0] == '殺球':
+                        glColor3f(255/255.,174/255.,201/255.)#pink
+                    elif btype[k][0] == '挑球' or btype[k][0] == '回挑':
+                        glColor3f(255/255.,130/255.,71/255.)#orange
+                    elif btype[k][0] == '平球' or btype[k][0] == '小平球':
+                        glColor3f(170/255.,170/255.,170/255.)#gray
+                    elif btype[k][0] == '長球':
+                        glColor3f(139/255.,69/255.,19/255.)#brown
+                    elif btype[k][0] == '撲球':
+                        glColor3f(155/255.,205/255.,155/255.)#green
+                    elif btype[k][0] == '未過網' or btype[j][0] == '未擊球' or btype[j][0] == '掛網球':
+                        glColor3f(0,0,1)
+                    glVertex2f(data[k][0],data[k][1])
+                    glEnd()
+                    glFlush()
+                    time.sleep(0.5)
 
             # mark last ball with blue
-            elif j == data.shape[0]-1:
+            if j == data.shape[0]-1:
                 glPointSize(20)
                 glBegin(GL_POINTS)
                 if rev2 == 0:
@@ -181,14 +253,14 @@ def display():
                 x2,y2 = data[j]
                 dx = (x2-x1)/500.0
                 dy = (y2-y1)/500.0
-                var = var - 1.0/data.size
+                var = var - 1.0/size
 
                 if rev2 == 0:
                     glColor3f(0,1-var,1-var)
                     for i in range(0,250,1):
                         glVertex2f(x1+dx*i, y1+dy*i)
 
-                    var = var - 1.0/data.size
+                    var = var - 1.0/size
                     glColor3f(0,1-var,1-var)
                     for i in range(250,500,1):
                         glVertex2f(x1+dx*i, y1+dy*i)
@@ -197,7 +269,7 @@ def display():
                     for i in range(0,250,1):
                         glVertex2f(x1+dx*i, y1+dy*i)
 
-                    var = var - 1.0/data.size
+                    var = var - 1.0/size
                     glColor3f(0,var,var)
                     for i in range(250,500,1):
                         glVertex2f(x1+dx*i, y1+dy*i)
@@ -216,7 +288,6 @@ def display():
                 glVertex2f(coordinate[0][0],coordinate[0][1])
                 glVertex2f(coordinate[1][0],coordinate[1][1])
                 glVertex2f(coordinate[2][0],coordinate[2][1])
-
                 glEnd()
                 glFlush()
 
@@ -293,10 +364,10 @@ def keyboard(bkey, x, y):
         rallyl=rallyl+1
         data = GetRallyPosition(connection,loserally[rallyl][0],loserally[rallyl][1])
         btype = GetRallyType(connection,loserally[rallyl][0],loserally[rallyl][1])
-        if data.shape[0] > 3:
-            data = data[-3:]
-        if btype.shape[0] > 3:
-            btype = btype[-3:]
+        if data.shape[0] > 4:
+            data = data[-4:]
+        if btype.shape[0] > 4:
+            btype = btype[-4:]
         print('Here is game:', loserally[rallyl][0], ', rally:', loserally[rallyl][1])
         unique_id = loserally[rallyl][0]
         rally = loserally[rallyl][1]
@@ -309,10 +380,10 @@ def keyboard(bkey, x, y):
         rallyl=rallyl-1
         data = GetRallyPosition(connection,loserally[rallyl][0],loserally[rallyl][1])
         btype = GetRallyType(connection,loserally[rallyl][0],loserally[rallyl][1])
-        if data.shape[0] > 3:
-            data = data[-3:]
-        if btype.shape[0] > 3:
-            btype = btype[-3:]
+        if data.shape[0] > 4:
+            data = data[-4:]
+        if btype.shape[0] > 4:
+            btype = btype[-4:]
         print('Here is game:', loserally[rallyl][0], ', rally:', loserally[rallyl][1])
         unique_id = loserally[rallyl][0]
         rally = loserally[rallyl][1]
