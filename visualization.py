@@ -100,7 +100,7 @@ def draw_course():
     glVertex2f(460.6,992.8)
     glEnd()
     glFlush()
-    
+
 def display():
     global data
     global btype
@@ -118,178 +118,234 @@ def display():
         print("Reverse!")
 
     # draw
-    for i in range(0,data.shape[0]-3,1):
+    for i in range(0,data.shape[0],1):
+        size = data.size
+
         # draw slowly :)
         time.sleep(0.5)
 
-        line = i
-        size = data.size*3
-        draw_course()
-
-        for j in range(i,i+4,1):
-            if j == 0:
-                for k in range(0,3,1):
-                    if k == 0:
-                        # mark first ball with black
-                        glPointSize(20)
-                        glBegin(GL_POINTS)
-                        if rev2 == 0:
-                            glColor3f(0,0,0)
-                        else:
-                            glColor3f(0,1,1)
-                        glVertex2f(data[0][0],data[0][1])
-                        glEnd()
-                        glFlush()
-                    else:
-                        # draw line
-                        glPointSize(2)
-                        glBegin(GL_POINTS)
-                        x1,y1 = data[k-1]
-                        x2,y2 = data[k]
-                        dx = (x2-x1)/500.0
-                        dy = (y2-y1)/500.0
-                        var = var - 1.0/size
-
-                        if rev2 == 0:
-                            glColor3f(0,1-var,1-var)
-                            for i in range(0,250,1):
-                                glVertex2f(x1+dx*i, y1+dy*i)
-
-                            var = var - 1.0/size
-                            glColor3f(0,1-var,1-var)
-                            for i in range(250,500,1):
-                                glVertex2f(x1+dx*i, y1+dy*i)
-                        else:
-                            glColor3f(0,var,var)
-                            for i in range(0,250,1):
-                                glVertex2f(x1+dx*i, y1+dy*i)
-
-                            var = var - 1.0/size
-                            glColor3f(0,var,var)
-                            for i in range(250,500,1):
-                                glVertex2f(x1+dx*i, y1+dy*i)
-                        glColor3f(0,0,1)
-                        glEnd()
-                        glFlush()
-                       
-                        # draw arrows
-                        glBegin(GL_TRIANGLES)
-                        if rev2 == 0:
-                            glColor3f(0,1-var,1-var)
-                            coordinate = triangle_coordinate(x1,y1,x2,y2,15)
-                        else:
-                            glColor3f(0,var,var)
-                            coordinate = triangle_coordinate(x2,y2,x1,y1,15)
-                        glVertex2f(coordinate[0][0],coordinate[0][1])
-                        glVertex2f(coordinate[1][0],coordinate[1][1])
-                        glVertex2f(coordinate[2][0],coordinate[2][1])
-                        glEnd()
-                        glFlush()
-
-                    # draw point
-                    glPointSize(15)
-                    glBegin(GL_POINTS)
-                    if btype[k][0] == '切球':
-                        glColor3f(30/255.,144/255.,255/255.)#blue
-                    elif btype[k][0] == '放小球' or btype[k][0] == '發小球' or btype[k][0] == '擋小球' or btype[k][0] == '小球':
-                        glColor3f(138/255.,43/255.,226/255.)#purple
-                    elif btype[k][0] == '殺球':
-                        glColor3f(255/255.,174/255.,201/255.)#pink
-                    elif btype[k][0] == '挑球' or btype[k][0] == '回挑':
-                        glColor3f(255/255.,130/255.,71/255.)#orange
-                    elif btype[k][0] == '平球' or btype[k][0] == '小平球':
-                        glColor3f(170/255.,170/255.,170/255.)#gray
-                    elif btype[k][0] == '長球':
-                        glColor3f(139/255.,69/255.,19/255.)#brown
-                    elif btype[k][0] == '撲球':
-                        glColor3f(155/255.,205/255.,155/255.)#green
-                    elif btype[k][0] == '未過網' or btype[j][0] == '未擊球' or btype[j][0] == '掛網球':
-                        glColor3f(0,0,1)
-                    glVertex2f(data[k][0],data[k][1])
-                    glEnd()
-                    glFlush()
-                    time.sleep(0.5)
-
-            # mark last ball with blue
-            if j == data.shape[0]-1:
-                glPointSize(20)
-                glBegin(GL_POINTS)
-                if rev2 == 0:
-                    glColor3f(0,1,1)
-                else:
-                    glColor3f(0,0,0)
-                glVertex2f(data[data.shape[0]-1][0],data[data.shape[0]-1][1])
-                glEnd()
-                glFlush()
-
-            # draw point
+        # make previous 3 ball fade out
+        if i > 3:
+            # point
             glPointSize(15)
             glBegin(GL_POINTS)
-            if btype[j][0] == '切球':
-                glColor3f(30/255.,144/255.,255/255.)#blue
-            elif btype[j][0] == '放小球' or btype[j][0] == '發小球' or btype[j][0] == '擋小球' or btype[j][0] == '小球':
-                glColor3f(138/255.,43/255.,226/255.)#purple
-            elif btype[j][0] == '殺球':
-                glColor3f(255/255.,174/255.,201/255.)#pink
-            elif btype[j][0] == '挑球' or btype[j][0] == '回挑':
-                glColor3f(255/255.,130/255.,71/255.)#orange
-            elif btype[j][0] == '平球' or btype[j][0] == '小平球':
-                glColor3f(170/255.,170/255.,170/255.)#gray
-            elif btype[j][0] == '長球':
-                glColor3f(139/255.,69/255.,19/255.)#brown
-            elif btype[j][0] == '撲球':
-                glColor3f(155/255.,205/255.,155/255.)#green
-            elif btype[j][0] == '未過網' or btype[j][0] == '未擊球' or btype[j][0] == '掛網球':
-                glColor3f(0,0,1)
-            glVertex2f(data[j][0],data[j][1])
+            glColor3f(238/255.,233/255.,238/255.)
+            glVertex2f(data[i-4][0],data[i-4][1])
             glEnd()
             glFlush()
 
-            # draw line
-            if j > 0 and j != i:
-                glPointSize(2)
-                glBegin(GL_POINTS)
+            # line
+            glLineWidth(4)
+            glBegin(GL_LINES)
+            x1,y1 = data[i-4]
+            x2,y2 = data[i-3]
+            glColor3f(238/255.,233/255.,238/255.)
+            glVertex2f(x1, y1)
+            glVertex2f(x2, y2)
+            glEnd()
+            glFlush()
+
+            # arrow
+            glBegin(GL_TRIANGLES)
+            glColor3f(238/255.,233/255.,238/255.)
+            if rev2 == 0:
+                coordinate = triangle_coordinate(x1,y1,x2,y2,15)
+            else:
+                coordinate = triangle_coordinate(x2,y2,x1,y1,15)
+            glVertex2f(coordinate[0][0],coordinate[0][1])
+            glVertex2f(coordinate[1][0],coordinate[1][1])
+            glVertex2f(coordinate[2][0],coordinate[2][1])
+            glEnd()
+            glFlush()
+
+            # redraw the path
+            vartmp = var + 4.0/size
+            for j in range(i-3, i, 1):
+                if j == i-3:
+                    # point
+                    glPointSize(15)
+                    glBegin(GL_POINTS)
+                    if btype[j][0] == '切球':
+                        glColor3f(30/255.,144/255.,255/255.)#blue
+                    elif btype[j][0] == '放小球' or btype[j][0] == '發小球' or btype[j][0] == '擋小球' or btype[j][0] == '小球':
+                        glColor3f(138/255.,43/255.,226/255.)#purple
+                    elif btype[j][0] == '殺球':
+                        glColor3f(255/255.,174/255.,201/255.)#pink
+                    elif btype[j][0] == '挑球' or btype[j][0] == '回挑':
+                        glColor3f(255/255.,130/255.,71/255.)#orange
+                    elif btype[j][0] == '平球' or btype[j][0] == '小平球':
+                        glColor3f(170/255.,170/255.,170/255.)#gray
+                    elif btype[j][0] == '長球':
+                        glColor3f(139/255.,69/255.,19/255.)#brown
+                    elif btype[j][0] == '撲球':
+                        glColor3f(155/255.,205/255.,155/255.)#green
+                    elif btype[j][0] == '未過網' or btype[j][0] == '未擊球' or btype[j][0] == '掛網球':
+                        glColor3f(0,0,1)
+                    glVertex2f(data[j][0],data[j][1])
+                    glEnd()
+                    glFlush()
+                    continue
+
+                # line
+                glLineWidth(4)
+                glBegin(GL_LINES)
                 x1,y1 = data[j-1]
                 x2,y2 = data[j]
-                dx = (x2-x1)/500.0
-                dy = (y2-y1)/500.0
-                var = var - 1.0/size
-
+                midx = (x1+x2)/2.0
+                midy = (y1+y2)/2.0      
+                vartmp = vartmp - 1.0/size
                 if rev2 == 0:
-                    glColor3f(0,1-var,1-var)
-                    for i in range(0,250,1):
-                        glVertex2f(x1+dx*i, y1+dy*i)
+                    glColor3f(0,1-vartmp,1-vartmp)
+                    glVertex2f(x1, y1)
+                    glVertex2f(midx, midy)
 
-                    var = var - 1.0/size
-                    glColor3f(0,1-var,1-var)
-                    for i in range(250,500,1):
-                        glVertex2f(x1+dx*i, y1+dy*i)
+                    vartmp = vartmp - 1.0/size
+                    glColor3f(0,1-vartmp,1-vartmp)
+                    glVertex2f(midx, midy)
+                    glVertex2f(x2, y2)
                 else:
-                    glColor3f(0,var,var)
-                    for i in range(0,250,1):
-                        glVertex2f(x1+dx*i, y1+dy*i)
+                    glColor3f(0,vartmp,vartmp)
+                    glVertex2f(x1, y1)
+                    glVertex2f(midx, midy)
 
-                    var = var - 1.0/size
-                    glColor3f(0,var,var)
-                    for i in range(250,500,1):
-                        glVertex2f(x1+dx*i, y1+dy*i)
+                    vartmp = vartmp - 1.0/size
+                    glColor3f(0,vartmp,vartmp)
+                    glVertex2f(midx, midy)
+                    glVertex2f(x2, y2)
                 glColor3f(0,0,1)
                 glEnd()
                 glFlush()
-               
-                # draw arrows
+
+                # arrow
                 glBegin(GL_TRIANGLES)
                 if rev2 == 0:
-                    glColor3f(0,1-var,1-var)
+                    glColor3f(0,1-vartmp,1-vartmp)
                     coordinate = triangle_coordinate(x1,y1,x2,y2,15)
                 else:
-                    glColor3f(0,var,var)
+                    glColor3f(0,vartmp,vartmp)
                     coordinate = triangle_coordinate(x2,y2,x1,y1,15)
                 glVertex2f(coordinate[0][0],coordinate[0][1])
                 glVertex2f(coordinate[1][0],coordinate[1][1])
                 glVertex2f(coordinate[2][0],coordinate[2][1])
                 glEnd()
                 glFlush()
+
+                # point
+                glPointSize(15)
+                glBegin(GL_POINTS)
+                if btype[j][0] == '切球':
+                    glColor3f(30/255.,144/255.,255/255.)#blue
+                elif btype[j][0] == '放小球' or btype[j][0] == '發小球' or btype[j][0] == '擋小球' or btype[j][0] == '小球':
+                    glColor3f(138/255.,43/255.,226/255.)#purple
+                elif btype[j][0] == '殺球':
+                    glColor3f(255/255.,174/255.,201/255.)#pink
+                elif btype[j][0] == '挑球' or btype[j][0] == '回挑':
+                    glColor3f(255/255.,130/255.,71/255.)#orange
+                elif btype[j][0] == '平球' or btype[j][0] == '小平球':
+                    glColor3f(170/255.,170/255.,170/255.)#gray
+                elif btype[j][0] == '長球':
+                    glColor3f(139/255.,69/255.,19/255.)#brown
+                elif btype[j][0] == '撲球':
+                    glColor3f(155/255.,205/255.,155/255.)#green
+                elif btype[j][0] == '未過網' or btype[j][0] == '未擊球' or btype[j][0] == '掛網球':
+                    glColor3f(0,0,1)
+                glVertex2f(data[j][0],data[j][1])
+                glEnd()
+                glFlush()
+            
+        # mark first ball with black
+        if i == 0:
+            glPointSize(20)
+            glBegin(GL_POINTS)
+            if rev2 == 0:
+                glColor3f(0,0,0)
+            else:
+                glColor3f(0,1,1)
+            glVertex2f(data[0][0],data[0][1])
+            glEnd()
+            glFlush()
+
+        # draw line and arrow
+        else:
+            # draw line
+            glLineWidth(4)
+            glBegin(GL_LINES)
+            x1,y1 = data[i-1]
+            x2,y2 = data[i]
+            midx = (x1+x2)/2.0
+            midy = (y1+y2)/2.0      
+            var = var - 1.0/size
+
+            if rev2 == 0:
+                glColor3f(0,1-var,1-var)
+                glVertex2f(x1, y1)
+                glVertex2f(midx, midy)
+
+                var = var - 1.0/size
+                glColor3f(0,1-var,1-var)
+                glVertex2f(midx, midy)
+                glVertex2f(x2, y2)
+            else:
+                glColor3f(0,var,var)
+                glVertex2f(x1, y1)
+                glVertex2f(midx, midy)
+
+                var = var - 1.0/size
+                glColor3f(0,var,var)
+                glVertex2f(midx, midy)
+                glVertex2f(x2, y2)
+            glColor3f(0,0,1)
+            glEnd()
+            glFlush()
+           
+            # draw arrows
+            glBegin(GL_TRIANGLES)
+            if rev2 == 0:
+                glColor3f(0,1-var,1-var)
+                coordinate = triangle_coordinate(x1,y1,x2,y2,15)
+            else:
+                glColor3f(0,var,var)
+                coordinate = triangle_coordinate(x2,y2,x1,y1,15)
+            glVertex2f(coordinate[0][0],coordinate[0][1])
+            glVertex2f(coordinate[1][0],coordinate[1][1])
+            glVertex2f(coordinate[2][0],coordinate[2][1])
+            glEnd()
+            glFlush()
+
+        # mark last ball with blue
+        if i == data.shape[0]-1:
+            glPointSize(20)
+            glBegin(GL_POINTS)
+            if rev2 == 0:
+                glColor3f(0,1,1)
+            else:
+                glColor3f(0,0,0)
+            glVertex2f(data[data.shape[0]-1][0],data[data.shape[0]-1][1])
+            glEnd()
+            glFlush()
+
+        # draw point
+        glPointSize(15)
+        glBegin(GL_POINTS)
+        if btype[i][0] == '切球':
+            glColor3f(30/255.,144/255.,255/255.)#blue
+        elif btype[i][0] == '放小球' or btype[i][0] == '發小球' or btype[i][0] == '擋小球' or btype[i][0] == '小球':
+            glColor3f(138/255.,43/255.,226/255.)#purple
+        elif btype[i][0] == '殺球':
+            glColor3f(255/255.,174/255.,201/255.)#pink
+        elif btype[i][0] == '挑球' or btype[i][0] == '回挑':
+            glColor3f(255/255.,130/255.,71/255.)#orange
+        elif btype[i][0] == '平球' or btype[i][0] == '小平球':
+            glColor3f(170/255.,170/255.,170/255.)#gray
+        elif btype[i][0] == '長球':
+            glColor3f(139/255.,69/255.,19/255.)#brown
+        elif btype[i][0] == '撲球':
+            glColor3f(155/255.,205/255.,155/255.)#green
+        elif btype[i][0] == '未過網' or btype[i][0] == '未擊球' or btype[i][0] == '掛網球':
+            glColor3f(0,0,1)
+        glVertex2f(data[i][0],data[i][1])
+        glEnd()
+        glFlush()
 
 def keyboard(bkey, x, y):
     key = bkey.decode("utf-8")
@@ -403,6 +459,7 @@ def keyboard(bkey, x, y):
             pause=1
             return
     '''
+
 '''
 def idle():
     global count
@@ -412,6 +469,7 @@ def idle():
         count = 0
         #glutPostRedisplay()
 '''
+
 def draw_text(img,text,fond_size,position,color):
     fontPath = "./Times_New_Roman_Bold.ttf"         # 指定 TTF 字體檔
     font = ImageFont.truetype(fontPath, fond_size)  # 載入字體
@@ -483,7 +541,6 @@ def picture():
     cv2.waitKey(0)
 
 def main_task(): 
-  
     # creating threads 
     t1 = threading.Thread(target=main) 
     t2 = threading.Thread(target=picture) 
