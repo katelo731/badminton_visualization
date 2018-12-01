@@ -43,8 +43,8 @@ with open('data/badminton.csv', newline='', encoding='utf8') as f:
             data = np.vstack((data, np.array(row)))
 
 kf = KFold(n_splits=7, random_state=27, shuffle=True)
-class_names = ['cut','netplay','lob','long','smash','drive','rush']
-# ['切球','小球','挑球','長球','殺球','平球','撲球']
+class_names = ['cut','drive','lob','long','netplay','rush','smash']
+# ['切球','平球','挑球','長球','小球','撲球','殺球']
 predc = np.empty((0,452), int)
 testc = np.empty((0,452), int)
 
