@@ -567,7 +567,7 @@ def show_info():
         type_height = 30*(currentidx)+15
         
         #draw type
-        fontPath = "./pen.ttc"
+        fontPath = "pen.ttc"
         pic = draw_text(pic , str(idx).rjust(2,' ')+rallytype[currentidx][0] , 33 , (type_width, type_height) , (139,100 ,54  ),fontPath)
     
         # expand window
