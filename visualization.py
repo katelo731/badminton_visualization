@@ -533,13 +533,15 @@ def show_info():
     pre = 0
     
     #show type initial
+    windowSize = (142,350)
     backgroundColor = (255,	255,255)
-    newpic = Image.new("RGBA",(140,350),backgroundColor)
+    newpic = Image.new("RGBA",windowSize,backgroundColor)
     pic = np.array(newpic)
     window_width = 100
     window_height = 300
     window_width_origin = window_width
     window_height_origin = window_height
+    pic = cv2.rectangle(pic, (2, 15), (140, 45),(0,0,255) , 2)
 
     while(True):
         player_info(unique_id)        
@@ -547,14 +549,18 @@ def show_info():
         
         #show type
         rallytype = GetRallyType(connection2,unique_id,rally)
-
+        change = False
+        if(pre != currentidx):
+            change = True
+        
         #ball round change
-        if(pre != currentidx and currentidx == 0):
+        if(change and currentidx == 0):
             #initial window
-            newpic = Image.new("RGBA",(140,350),backgroundColor)    
+            newpic = Image.new("RGBA",windowSize,backgroundColor)    
             pic = np.array(newpic)
             window_height = window_height_origin
             window_width = window_width_origin
+            
         pre = currentidx
 
         #index error check
@@ -573,10 +579,18 @@ def show_info():
         # expand window
         if(type_height + 30 > window_height):   
             window_height += 30
-            newpic = Image.new("RGBA",(140,42),backgroundColor)
+            newpic = Image.new("RGBA",(142,42),backgroundColor)
             expand = np.array(newpic)
             pic = np.vstack((pic, expand))
         
+        # add frame
+        if(change and currentidx == 0):
+            pic = cv2.rectangle(pic, (3, 15), (140, 45),(0,0,255) , 2)
+        elif(change):
+            pic = cv2.rectangle(pic, (3, type_height-29), (140, type_height),(255,255,255) , 3)
+            pic = cv2.rectangle(pic, (3, type_height), (140, type_height+29),(0,0,255) , 2)
+            
+
         #create window
         create_CVwindow(window_width,window_height,600,0,'type_info',pic)
         
