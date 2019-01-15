@@ -568,7 +568,6 @@ def show_info():
         
         #draw type
         fontPath = "./pen.ttc"
-        font = ImageFont.truetype(fontPath, 75)	
         pic = draw_text(pic , str(idx).rjust(2,' ')+rallytype[currentidx][0] , 33 , (type_width, type_height) , (139,100 ,54  ),fontPath)
     
         # expand window
