@@ -29,6 +29,7 @@ rev1 = 0
 rev2 = 0
 unique_id = allrally[0][0]
 rally = 1
+currentidx = 0
 #pause = 0
 
 def init():
@@ -106,6 +107,8 @@ def display():
     global btype
     global rev1
     global rev2
+    global currentidx
+
     var = 0.95
     draw_course()
     
@@ -124,8 +127,10 @@ def display():
         # draw slowly :)
         time.sleep(0.5)
 
+        currentidx = i
         # make previous 3 ball fade out
         if i > 3:
+            
             # point
             glPointSize(15)
             glBegin(GL_POINTS)
@@ -470,8 +475,7 @@ def idle():
         #glutPostRedisplay()
 '''
 
-def draw_text(img,text,fond_size,position,color):
-    fontPath = "./Times_New_Roman_Bold.ttf"         # 指定 TTF 字體檔
+def draw_text(img,text,fond_size,position,color,fontPath):
     font = ImageFont.truetype(fontPath, fond_size)  # 載入字體
 
     aPil = Image.fromarray(img)                     # 將 NumPy 陣列轉為 PIL 影像
@@ -485,42 +489,106 @@ def show_color_type():
     img = cv2.imread('./color2.jpg')
     create_CVwindow(122,248,470,0,'Color',img)
 
-def show_player_info():
-    global unique_id
-    unique_id = allrally[0][0]
-    while(True):
-        # load data
-        name_upper,player_upper = GetCourtUpper(connection2,unique_id)
-        name_lower,player_lower = GetCourtLower(connection2,unique_id)
-        score_upper = GetRallyPoints(connection2,unique_id,rally,player_upper)
-        score_lower = GetRallyPoints(connection2,unique_id,rally,player_lower)
-        # show picture and name
-        upper = cv2.imread(str(name_upper) + '.jpg')
-        lower = cv2.imread(str(name_lower) + '.jpg')
-        cv2.rectangle(upper, (0, 516), (560, 646),(238, 215,143 ) , -1)
-        cv2.rectangle(lower, (0, 516), (560, 646), (142, 215,167 ), -1)
-        upper = draw_text(upper , name_upper , 75 , (80,520) , (79,24,0))
-        lower = draw_text(lower , name_lower , 75 , (80,520) , (8,35,0))
-        
-        # show score
-        if score_upper > score_lower:
-            cv2.circle(upper, (470, 430), 68, (0,0,255 ), -1, 8, 0)
-            cv2.circle(lower, (470, 430), 68, (0,0,0 ), -1, 8, 0)
-        elif score_upper < score_lower:
-            cv2.circle(upper, (470, 430), 68, (0,0,0 ), -1, 8, 0)
-            cv2.circle(lower, (470, 430), 68, (0,0,255 ), -1, 8, 0)
-        else:
-            cv2.circle(upper, (470, 430), 68, (40, 144, 255), -1, 8, 0)
-            cv2.circle(lower, (470, 430), 68, (40, 144, 255), -1, 8, 0)
-        
-        upper = draw_text(upper , str(score_upper).rjust(2,' ') , 85 , (430, 385) , (255,255,255 ))
-        lower = draw_text(lower , str(score_lower).rjust(2,' ') , 85 , (430, 385) , (255,255,255 ))
-        
-        numpy_vertical = np.vstack((upper, lower))
+def player_info(unique_id):
+    # load data
+    name_upper,player_upper = GetCourtUpper(connection2,unique_id)
+    name_lower,player_lower = GetCourtLower(connection2,unique_id)
+    score_upper = GetRallyPoints(connection2,unique_id,rally,player_upper)
+    score_lower = GetRallyPoints(connection2,unique_id,rally,player_lower)
 
-        create_CVwindow(140,350,460,300,'PlayerInfo',numpy_vertical)
+    # show picture and name
+    upper = cv2.imread(str(name_upper) + '.jpg')
+    lower = cv2.imread(str(name_lower) + '.jpg')
+    cv2.rectangle(upper, (0, 516), (560, 646),(238, 215,143 ) , -1)
+    cv2.rectangle(lower, (0, 516), (560, 646), (142, 215,167 ), -1)
+    fontPath = "./Times_New_Roman_Bold.ttf"         # 指定 TTF 字體檔
+    upper = draw_text(upper , name_upper , 75 , (80,520) , (79,24,0),fontPath)
+    lower = draw_text(lower , name_lower , 75 , (80,520) , (8,35,0),fontPath)
+    
+    # show score
+    if score_upper > score_lower:
+        cv2.circle(upper, (470, 430), 68, (0,0,255 ), -1, 8, 0)
+        cv2.circle(lower, (470, 430), 68, (0,0,0 ), -1, 8, 0)
+    elif score_upper < score_lower:
+        cv2.circle(upper, (470, 430), 68, (0,0,0 ), -1, 8, 0)
+        cv2.circle(lower, (470, 430), 68, (0,0,255 ), -1, 8, 0)
+    else:
+        cv2.circle(upper, (470, 430), 68, (40, 144, 255), -1, 8, 0)
+        cv2.circle(lower, (470, 430), 68, (40, 144, 255), -1, 8, 0)
+    
+    upper = draw_text(upper , str(score_upper).rjust(2,' ') , 85 , (430, 385) , (255,255,255 ),fontPath)
+    lower = draw_text(lower , str(score_lower).rjust(2,' ') , 85 , (430, 385) , (255,255,255 ),fontPath)
+    
+    numpy_vertical = np.vstack((upper, lower))
+
+    create_CVwindow(140,350,460,300,'PlayerInfo',numpy_vertical)
+
+def show_info():
+    global unique_id
+    global rally
+    global currentidx
+    unique_id = allrally[0][0]
+    rally = 1
+    currentidx = 0
+    pre = 0
+    
+    #show type initial
+    backgroundColor = (255,	255,255)
+    newpic = Image.new("RGBA",(140,350),backgroundColor)
+    pic = np.array(newpic)
+    window_width = 100
+    window_height = 300
+    window_width_origin = window_width
+    window_height_origin = window_height
+
+    while(True):
+        player_info(unique_id)        
         cv2.waitKey(1)
-   
+        
+        #show type
+        rallytype = GetRallyType(connection2,unique_id,rally)
+
+        #ball round change
+        if(pre != currentidx and currentidx == 0):
+            #initial window
+            newpic = Image.new("RGBA",(140,350),backgroundColor)    
+            pic = np.array(newpic)
+            window_height = window_height_origin
+            window_width = window_width_origin
+        pre = currentidx
+
+        #index error check
+        if(currentidx > rallytype.shape[0]-1):
+            continue
+        
+        #set type position
+        idx = currentidx+1
+        type_width = 5
+        type_height = 30*(currentidx)+15
+        
+        #draw type
+        fontPath = "./pen.ttc"
+        font = ImageFont.truetype(fontPath, 75)	
+        pic = draw_text(pic , str(idx).rjust(2,' ')+rallytype[currentidx][0] , 33 , (type_width, type_height) , (139,100 ,54  ),fontPath)
+    
+        # expand window
+        if(type_height + 30 > window_height):   
+            window_height += 30
+            newpic = Image.new("RGBA",(140,42),backgroundColor)
+            expand = np.array(newpic)
+            pic = np.vstack((pic, expand))
+        
+        #create window
+        create_CVwindow(window_width,window_height,600,0,'type_info',pic)
+        
+        cv2.waitKey(1)
+
+# def show_type_info():
+#     # Load an type & color image
+#     pic = cv2.imread('./tmp.png') 
+#     create_CVwindow(140,350,600,0,'type_info',pic)
+#     # cv2.waitKey(0)
+
 def main():
     glutInit(sys.argv)
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB)
@@ -537,13 +605,14 @@ def main():
     
 def picture():
     show_color_type()
-    show_player_info()
+    show_info()
     cv2.waitKey(0)
 
 def main_task(): 
     # creating threads 
     t1 = threading.Thread(target=main) 
     t2 = threading.Thread(target=picture) 
+    # t2 = threading.Thread(target=show_type_info) 
   
     # start threads 
     t1.start() 
