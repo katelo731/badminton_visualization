@@ -34,7 +34,7 @@ currentidx = 0
 
 def init():
     glClearColor(1,1,1,1)
-    gluOrtho2D(500,0,0,1050)   #left, right, bottom, top
+    gluOrtho2D(463.6,-36.4,-57.4,992.6)   #left, right, bottom, top
 
 def create_GLwindow(size_h,size_w,position_h,position_w,name):
     glutInitWindowSize(size_h,size_w) #height,width 
@@ -72,33 +72,33 @@ def draw_course():
     glBegin(GL_LINES)
     glColor3f(1,0,0)
     # parallel course line
-    glVertex2f(36.4,57.4)
-    glVertex2f(460.6,57.4)
-    glVertex2f(36.4,110.6)
-    glVertex2f(460.6,110.6)
-    glVertex2f(36.4,385.2)
-    glVertex2f(460.6,385.2)
-    glVertex2f(36.4,525.2)
-    glVertex2f(460.6,525.2)
-    glVertex2f(36.4,665.2)
-    glVertex2f(460.6,665.2)
-    glVertex2f(36.4,939.6)
-    glVertex2f(460.6,939.6)
-    glVertex2f(36.4,992.8)
-    glVertex2f(460.6,992.8)
+    glVertex2f(0,0)
+    glVertex2f(424.2,0)
+    glVertex2f(0,53.2)
+    glVertex2f(424.2,53.2)
+    glVertex2f(0,327.8)
+    glVertex2f(424.2,327.8)
+    glVertex2f(0,467.8)
+    glVertex2f(424.2,467.8)
+    glVertex2f(0,607.8)
+    glVertex2f(424.2,607.8)
+    glVertex2f(0,882.2)
+    glVertex2f(424.2,882.2)
+    glVertex2f(0,935.4)
+    glVertex2f(424.2,935.4)
     # vertical course line
-    glVertex2f(36.4,57.4)
-    glVertex2f(36.4,992.8)
-    glVertex2f(68.6,57.4)
-    glVertex2f(68.6,992.8)
-    glVertex2f(248.5,57.4)
-    glVertex2f(248.5,385.2)
-    glVertex2f(248.5,665.2)
-    glVertex2f(248.5,992.8)
-    glVertex2f(428.4,57.4)
-    glVertex2f(428.4,992.8)
-    glVertex2f(460.6,57.4)
-    glVertex2f(460.6,992.8)
+    glVertex2f(0,0)
+    glVertex2f(0,935.4)
+    glVertex2f(32.2,0)
+    glVertex2f(32.2,935.4)
+    glVertex2f(212.1,0)
+    glVertex2f(212.1,327.8)
+    glVertex2f(212.1,607.8)
+    glVertex2f(212.1,935.4)
+    glVertex2f(392,0)
+    glVertex2f(392,935.4)
+    glVertex2f(424.2,0)
+    glVertex2f(424.2,935.4)
     glEnd()
     glFlush()
 
@@ -125,7 +125,7 @@ def display():
         size = data.size
 
         # draw slowly :)
-        time.sleep(0.5)
+        time.sleep(0.1)
 
         currentidx = i
         # make previous 3 ball fade out
@@ -574,7 +574,7 @@ def show_info():
         
         #draw type
         fontPath = "pen.ttc"
-        pic = draw_text(pic , str(idx).rjust(2,' ')+rallytype[currentidx][0] , 33 , (type_width, type_height) , (139,100 ,54  ),fontPath)
+        pic = draw_text(pic , str(idx).rjust(2,' ')+rallytype[currentidx][0] , 30 , (type_width, type_height) , (139,100 ,54  ),fontPath)
     
         # expand window
         if(type_height + 30 > window_height):   
