@@ -3,7 +3,7 @@ import cv2
 import pickle
 from collections import defaultdict
 
-name="TAI Tzu Ying vs CHEN Yufei 2018 Indonesia Open Final  vs"
+name="1.WS _ TAI Tzu Ying (TPE) [1] vs CHEN Yufei (CHN) [8] _ BWF 2018 (odiasongs.online)"
 ext=".mp4"
 filename=name+ext
 data_position=defaultdict(list)
@@ -55,7 +55,7 @@ def click_and_crop(event, x, y, flags, param):
 def toframe(cap,n,total_frame):
 	global court_map,court_map_base
 	showinfo(n)
-	cap.set(cv2.CAP_PROP_POS_FRAMES,n);
+	cap.set(cv2.CAP_PROP_POS_FRAMES,n)
 	ret, frame = cap.read()
 
 	if not ret:
@@ -85,6 +85,11 @@ while True:
 	if key == ord("f"):
 		current=int(input('Enter your frame:'))
 		image=toframe(cap,current,total_frame)
+	if key == ord("o"):
+		current+=30
+		image=toframe(cap,current,total_frame)
+	if key == ord("r"):
+		current-=30
 	if key == ord("i"):
 		current+=3
 		image=toframe(cap,current,total_frame)
