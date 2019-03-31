@@ -1,5 +1,5 @@
 ## Training methods:
-1. Random forest (k-fold_cm.py)
-2. K-means (kmeans.py)
-3. SVM (svm.py)
-
+1. RandomForest.py
+2. kmeans.py
+3. SVM.py
+4. XGBoost.py
