@@ -1,11 +1,11 @@
+import io
+import sys
+import csv
 import imp
 import itertools
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import sys
-import io
-import csv
 from sklearn.tree import export_graphviz
 from sklearn.model_selection import *
 from sklearn.metrics import *
@@ -19,9 +19,9 @@ def plot_cm(cm, classes):
     plt.title('Confusion matrix')
     plt.colorbar()
     plt.xlabel('Actual Class')
-    plt.ylabel('Predicted Class')    
-    plt.xticks(np.arange(len(classes)), classes)
-    plt.yticks(np.arange(len(classes)), classes)
+    plt.ylabel('Predicted Class')
+    plt.xticks(np.arange(len(classes)-1), classes)
+    plt.yticks(np.arange(len(classes)-1), classes)
    
     for j, i in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
         if i == j:
@@ -54,7 +54,6 @@ y = data[:,-1] # target
 indices = np.arange(len(data))
 X_train, X_test, y_train, y_test, train_idx, test_idx = train_test_split(X, y, indices, test_size=0.2, random_state=41)
 
-class_names = ['cut','drive','lob','long','netplay','rush','smash']
 label_name_dict = {
     0:"cut",
     1:"drive",
@@ -65,6 +64,8 @@ label_name_dict = {
     6:"smash",
     7:""
 }
+new_dict = {v : k for k, v in label_name_dict.items()}
+
 type_labels = pd.DataFrame(label_name_dict, index=[0])
 type_labels = type_labels.values[0]
 
@@ -74,72 +75,50 @@ grid_predictions = dtree.predict(X_test)
 
 # confusion matrix
 cm = confusion_matrix(y_test, grid_predictions)
-print('Confusion matrix:', '\r', cm)
+print('Confusion matrix with the best estimator:', '\r', cm)
 print('Precision for each label:', precision_score(y_test, grid_predictions, average=None))
 print('Recall for each label:', recall_score(y_test, grid_predictions, average=None))
 print('Total Accuracy: ', accuracy_score(y_test, grid_predictions))
-
-plot_cm(cm, class_names)
+plot_cm(cm, type_labels)
+plt.clf()
+plt.close()
 
 # radar chart
 plt.rcParams['axes.unicode_minus'] = False
-##plt.style.use('ggplot')
 
-values = [0, 0, 0, 0, 0, 0, 0]
-values2 = [0, 0, 0, 0, 0, 0, 0]
+yv = [0, 0, 0, 0, 0, 0, 0]
+pred = [0, 0, 0, 0, 0, 0, 0]
 total = 0
 
-for i in range(len(y_test)):
-    if y_test[i] == 'cut': 
-        values[0] += 1
-    elif y_test[i] == 'drive':
-        values[1] += 1
-    elif y_test[i] == 'lob':
-        values[2] += 1
-    elif y_test[i] == 'long':
-        values[3] += 1
-    elif y_test[i] == 'netplay':
-        values[4] += 1
-    elif y_test[i] == 'rush':
-        values[5] += 1
-    elif y_test[i] == 'smash':
-        values[6] += 1
-    total = total + 1
+type_list = [new_dict[i] for i in y_test]
+type_set = set(type_list)
+for i in type_set:
+    yv[i] = type_list.count(i)
+    total += yv[i]
 
-for i in range(len(grid_predictions)):
-    if grid_predictions[i] == 'cut': 
-        values2[0] += 1
-    elif grid_predictions[i] == 'drive':
-        values2[1] += 1
-    elif grid_predictions[i] == 'lob':
-        values2[2] += 1
-    elif grid_predictions[i] == 'long':
-        values2[3] += 1
-    elif grid_predictions[i] == 'netplay':
-        values2[4] += 1
-    elif grid_predictions[i] == 'rush':
-        values2[5] += 1
-    elif grid_predictions[i] == 'smash':
-        values2[6] += 1
+type_list2 = [new_dict[i] for i in grid_predictions]
+type_set2 = set(type_list2)
+for i in type_set2:
+    pred[i] = type_list2.count(i)
 
-N = len(values)
-angles=np.linspace(0, 2*np.pi, N, endpoint=False)
-values=np.concatenate((values,[values[0]]))
-values2=np.concatenate((values2,[values2[0]]))
-angles=np.concatenate((angles,[angles[0]]))
+N = len(yv)
+angles = np.linspace(0, 2*np.pi, N, endpoint = False)
+yv = np.concatenate((yv, [yv[0]]))
+pred = np.concatenate((pred, [pred[0]]))
+angles = np.concatenate((angles, [angles[0]]))
 
-fig=plt.figure(0)
-ax = fig.add_subplot(111, polar=True)
-data_radar_real = np.concatenate((values, [values[0]]))
-ax.plot(angles, values, linewidth=2, label = 'real')
-data_radar_predict = np.concatenate((values2, [values2[0]]))
-ax.plot(angles, values2, linewidth=2, label = 'predict')
-values2 = np.asarray(values2)
-propotion = np.round(values2/total*100,2)
+fig = plt.figure(0)
+ax = fig.add_subplot(111, polar = True)
+data_radar_real = np.concatenate((yv, [yv[0]]))
+ax.plot(angles, yv, linewidth=2, label = 'real')
+data_radar_predict = np.concatenate((pred, [pred[0]]))
+ax.plot(angles, pred, linewidth=2, label = 'predict')
+pred = np.asarray(pred)
+propotion = np.round(pred / total*100,2)
 propotion = propotion.astype(str)
-ax.set_thetagrids(angles * 180 / np.pi, type_labels+'\n'+propotion+'%')
-plt.title('type predition',loc='right')
-plt.legend(bbox_to_anchor=(1.1, 0), bbox_transform=ax.transAxes)
+ax.set_thetagrids(angles * 180 / np.pi, type_labels + '\n' + propotion + '%')
+plt.title('type predition',loc ='right')
+plt.legend(bbox_to_anchor = (1.1, 0), bbox_transform = ax.transAxes)
 plt.savefig('rf_radar.png')
 plt.clf()
 plt.close()
