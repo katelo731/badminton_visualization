@@ -6,7 +6,6 @@ import numpy as np
 import xgboost as xgb
 import matplotlib.pyplot as plt
 from xgboost import XGBClassifier
-from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import *
 from sklearn.model_selection import *
 import warnings 
