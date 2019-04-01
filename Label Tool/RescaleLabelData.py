@@ -16,10 +16,10 @@ except EOFError:                             # the exception is used to break th
 	pass                                     # we don't need to do anything special
 
 hit = str(hit)
-outfile = open('posfile.csv', 'w')
+outfile = open(name+'_posfile.csv', 'w')
 
 cap = cv2.VideoCapture(filename)
-fps = math.ceil(cap.get(cv2.CAP_PROP_FPS))
+fps = round(cap.get(cv2.CAP_PROP_FPS))
 
 begin = False
 isx = False
