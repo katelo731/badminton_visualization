@@ -1,9 +1,13 @@
 import pickle
 import math
+import cv2
 from itertools import islice
-name = "TAI Tzu Ying vs CHEN Yufei 2018 Indonesia Open Final  vs"
+name = "WS _ TAI Tzu Ying (TPE) [1] vs CHEN Yufei (CHN) [8] _ BWF 2018 (odiasongs.online)"
+ext=".mp4"
+filename=name+ext
 
 hit = []
+
 try:
 	with open(name+"_position.pkl",'rb') as f:
 		while True:                          # loop indefinitely
@@ -13,6 +17,9 @@ except EOFError:                             # the exception is used to break th
 
 hit = str(hit)
 outfile = open('posfile.csv', 'w')
+
+cap = cv2.VideoCapture(filename)
+fps = math.ceil(cap.get(cv2.CAP_PROP_FPS))
 
 begin = False
 isx = False
@@ -244,7 +251,7 @@ for i in range(len(hit)):
 			if printf == False:
 				outfile.write(str(frame))
 				outfile.write(',')
-				frame /= 30
+				frame /= fps
 				s = frame % 60
 				frame /= 60
 				m = frame % 60
