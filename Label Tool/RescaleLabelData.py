@@ -2,7 +2,7 @@ import pickle
 import math
 import cv2
 from itertools import islice
-name = "WS _ TAI Tzu Ying (TPE) [1] vs CHEN Yufei (CHN) [8] _ BWF 2018 (odiasongs.online)"
+name = "2.Final - TAI Tzu Ying vs CHEN YuFei - Badminton Indonesia Open 2018"
 ext=".mp4"
 filename=name+ext
 
@@ -52,138 +52,142 @@ for i in range(len(hit)):
 
 			#convert coordinate to area
 			if( y == 417):
-				if( x > 10 and x < 40):
+				if( x < 10):		
+					area = "F0"	
+				if( x >= 10 and x < 40):
 					area = "D0"
-				elif( x > 40 and x < 195):				
+				elif( x >= 40 and x < 195):				
 					area = "B0"
-				elif( x > 195 and x < 350):
+				elif( x >= 195 and x < 350):
 					area = "A0"
-				elif( x > 350 and x < 378):
+				elif( x >= 350 and x <= 378):
 					area = "C0"
+				else:
+					area = "E0"
 			elif( y < 14):
 				if( x < 10):		
 					area = "F5"				
-				elif( x > 10 and x < 40):	
+				elif( x >= 10 and x < 40):	
 					area = "D5"
-				elif( x > 40 and x < 195):
+				elif( x >= 40 and x < 195):
 					area = "B5"
-				elif( x > 195 and x < 350):				
+				elif( x >= 195 and x < 350):				
 					area = "A5"
-				elif( x > 350 and x < 378):
+				elif( x >= 350 and x < 378):
 					area = "C5"
 				else:			
 					area = "E5"
 			elif( y > 820):
 				if( x < 10):
 					area = "E5"
-				if( x > 10 and x < 40):			
+				if( x >= 10 and x < 40):			
 					area = "C5"				
-				elif( x > 40 and x < 195):			
+				elif( x >= 40 and x < 195):			
 					area = "A5"				
-				elif( x > 195 and x < 350):		
+				elif( x >= 195 and x < 350):		
 					area = "B5"				
-				elif( x > 350 and x < 378):			
+				elif( x >= 350 and x < 378):			
 					area = "D5"				
 				else:			
 					area = "F5"			
 			elif( x < 10):
-				if( y > 14 and y < 60):		
+				if( y >= 14 and y < 60):		
 					area = "F4"				
-				elif( y > 60 and y < 178):			
+				elif( y >= 60 and y < 178):			
 					area = "F3"			
-				elif( y > 178 and y < 296):
+				elif( y >= 178 and y < 296):
 					area = "F2"				
-				elif( y > 296 and y < 417):
+				elif( y >= 296 and y < 417):
 					area = "F1"				
-				elif( y > 417 and y < 538):
+				elif( y >= 417 and y < 538):
 					area = "E1"				
-				elif( y > 538 and y < 655):			
+				elif( y >= 538 and y < 655):			
 					area = "E2"				
-				elif( y > 655 and y < 772):
+				elif( y >= 655 and y < 772):
 					area = "E3"
-				elif( y > 772 and y < 820):
+				elif( y >= 772 and y < 820):
 					area = "E4"
 			elif( x > 378):
-				if( y > 14 and y < 60):			
+				if( y >= 14 and y < 60):			
 					area = "E4"				
-				elif( y > 60 and y < 178):
+				elif( y >= 60 and y < 178):
 					area = "E3"				
-				elif( y > 178 and y < 296):
+				elif( y >= 178 and y < 296):
 					area = "E2"				
-				elif( y > 296 and y < 417):
+				elif( y >= 296 and y < 417):
 					area = "E1"
-				elif( y > 417 and y < 538):
+				elif( y >= 417 and y < 538):
 					area = "F1"				
-				elif( y > 538 and y < 655):
+				elif( y >= 538 and y < 655):
 					area = "F2"
-				elif( y > 655 and y < 772):
+				elif( y >= 655 and y < 772):
 					area = "F3"				
-				elif( y > 772 and y < 820):		
+				elif( y >= 772 and y < 820):		
 					area = "F4"
 
-			elif( x > 10 and x < 40 and y > 14 and y < 60 ):
+			elif( x >= 10 and x < 40 and y >= 14 and y < 60 ):
 				area = "D4"
-			elif( x > 10 and x < 40 and y > 60 and y < 178 ):
+			elif( x >= 10 and x < 40 and y >= 60 and y < 178 ):
 				area = "D3"
-			elif( x > 10 and x < 40 and y > 178 and y < 296 ):
+			elif( x >= 10 and x < 40 and y >= 178 and y < 296 ):
 				area = "D2"
-			elif( x > 10 and x < 40 and y > 296 and y < 417 ):
+			elif( x >= 10 and x < 40 and y >= 296 and y < 417 ):
 				area = "D1"
-			elif( x > 10 and x < 40 and y > 417 and y < 538 ):
+			elif( x >= 10 and x < 40 and y >= 417 and y < 538 ):
 				area = "C1"
-			elif( x > 10 and x < 40 and y > 538 and y < 655 ):
+			elif( x >= 10 and x < 40 and y >= 538 and y < 655 ):
 				area = "C2"
-			elif( x > 10 and x < 40 and y > 655 and y < 772 ):
+			elif( x >= 10 and x < 40 and y >= 655 and y < 772 ):
 				area = "C3"
-			elif( x > 10 and x < 40 and y > 772 and y < 820 ):
+			elif( x >= 10 and x < 40 and y >= 772 and y < 820 ):
 				area = "C4"
-			elif( x > 40 and x < 195 and y > 14 and y < 60 ):
+			elif( x >= 40 and x < 195 and y >= 14 and y < 60 ):
 				area = "B4"
-			elif( x > 40 and x < 195 and y > 60 and y < 178 ):
+			elif( x >= 40 and x < 195 and y >= 60 and y < 178 ):
 				area = "B3"
-			elif( x > 40 and x < 195 and y > 178 and y < 296 ):
+			elif( x >= 40 and x < 195 and y >= 178 and y < 296 ):
 				area = "B2"
-			elif( x > 40 and x < 195 and y > 296 and y < 417 ):
+			elif( x >= 40 and x < 195 and y >= 296 and y < 417 ):
 				area = "B1"
-			elif( x > 40 and x < 195 and y > 417 and y < 538 ):
+			elif( x >= 40 and x < 195 and y >= 417 and y < 538 ):
 				area = "A1"
-			elif( x > 40 and x < 195 and y > 538 and y < 655 ):
+			elif( x >= 40 and x < 195 and y >= 538 and y < 655 ):
 				area = "A2"
-			elif( x > 40 and x < 195 and y > 655 and y < 772 ):
+			elif( x >= 40 and x < 195 and y >= 655 and y < 772 ):
 				area = "A3"
-			elif( x > 40 and x < 195 and y > 772 and y < 820 ):
+			elif( x >= 40 and x < 195 and y >= 772 and y < 820 ):
 				area = "A4"
-			elif( x > 195 and x < 350 and y > 14 and y < 60 ):
+			elif( x >= 195 and x < 350 and y >= 14 and y < 60 ):
 				area = "A4"
-			elif( x > 195 and x < 350 and y > 60 and y < 178 ):
+			elif( x >= 195 and x < 350 and y >= 60 and y < 178 ):
 				area = "A3"
-			elif( x > 195 and x < 350 and y > 178 and y < 296 ):
+			elif( x >= 195 and x < 350 and y >= 178 and y < 296 ):
 				area = "A2"
-			elif( x > 195 and x < 350 and y > 296 and y < 417 ):
+			elif( x >= 195 and x < 350 and y >= 296 and y < 417 ):
 				area = "A1"
-			elif( x > 195 and x < 350 and y > 417 and y < 538 ):
+			elif( x >= 195 and x < 350 and y >= 417 and y < 538 ):
 				area = "B1"
-			elif( x > 195 and x < 350 and y > 538 and y < 655 ):
+			elif( x >= 195 and x < 350 and y >= 538 and y < 655 ):
 				area = "B2"
-			elif( x > 195 and x < 350 and y > 655 and y < 772 ):
+			elif( x >= 195 and x < 350 and y >= 655 and y < 772 ):
 				area = "B3"
-			elif( x > 195 and x < 350 and y > 772 and y < 820 ):
+			elif( x >= 195 and x < 350 and y >= 772 and y < 820 ):
 				area = "B4"
-			elif( x > 350 and x < 378 and y > 14 and y < 60 ):
+			elif( x >= 350 and x < 378 and y >= 14 and y < 60 ):
 				area = "C4"
-			elif( x > 350 and x < 378 and y > 60 and y < 178 ):
+			elif( x >= 350 and x < 378 and y >= 60 and y < 178 ):
 				area = "C3"
-			elif( x > 350 and x < 378 and y > 178 and y < 296 ):
+			elif( x >= 350 and x < 378 and y >= 178 and y < 296 ):
 				area = "C2"
-			elif( x > 350 and x < 378 and y > 296 and y < 417 ):
+			elif( x >= 350 and x < 378 and y >= 296 and y < 417 ):
 				area = "C1"
-			elif( x > 350 and x < 378 and y > 417 and y < 538 ):
+			elif( x >= 350 and x < 378 and y >= 417 and y < 538 ):
 				area = "D1"
-			elif( x > 350 and x < 378 and y > 538 and y < 655 ):
+			elif( x >= 350 and x < 378 and y >= 538 and y < 655 ):
 				area = "D2"
-			elif( x > 350 and x < 378 and y > 655 and y < 772 ):
+			elif( x >= 350 and x < 378 and y >= 655 and y < 772 ):
 				area = "D3"
-			elif( x > 350 and x < 378 and y > 772 and y < 820 ):
+			elif( x >= 350 and x < 378 and y >= 772 and y < 820 ):
 				area = "D4"
 			else:
 				area = "yy"
