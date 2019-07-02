@@ -252,9 +252,9 @@ if __name__ == '__main__':
     data2 = np.zeros(shape=(len(data), 4))
     for i in range(len(data)):
         data2[i][0] = data[i][4] + data[i][6]/2
-        data2[i][1] = data[i][5] + data[i][7]/2
+        data2[i][1] = data[i][5] + data[i][7]
         data2[i][2] = data[i][12] + data[i][14]/2
-        data2[i][3] = data[i][13] + data[i][15]/2
+        data2[i][3] = data[i][13] + data[i][15]
     data = np.hstack((data, data2[:]))
 
     for i in range(0, 4):
